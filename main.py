@@ -1,7 +1,6 @@
 """
 main code for project
 """
-
 import csv
 import player
 
@@ -12,5 +11,13 @@ with open('Data.csv', newline='') as Data:
     DataSet = DataSet[1:] # Exclude first row - this is the headings for the data
 
 
-player1 = player.Player(DataSet[0])
-print(player1.name)
+for row in DataSet:
+    # check if the player already exists in the list of player objects
+    for existingPlayer in player.playerDB:
+        if existingPlayer.name == row[2]:
+            existingPlayer.update(row) # update the object with new data
+            break
+    else:
+        player1 = player.Player(row)
+        player.playerDB.append(player1) # add the player to the DB
+
