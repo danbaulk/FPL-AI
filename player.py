@@ -51,5 +51,5 @@ class Player:
         form = 0
         for points in self.performances:
             form += points
-        form = form / 4
+        form = form / 4 # calculate form as an average of the 4 most recent performances
         return form
