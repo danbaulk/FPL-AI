@@ -22,4 +22,3 @@ for row in DataSet:
         player1 = player.Player(row)
         player.playerDB.append(player1) # add the player to the DB
         currentPlayer = player1
-    

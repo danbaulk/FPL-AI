@@ -17,13 +17,18 @@ class Player:
         self.creativity = rawData[9] # creativity score for player
         self.threat = rawData[29] # threat score for player
         self.ict = rawData[14] # ICT index score for player
+        # TODO
+        self.xGI = 0 # expected Goal Involvement
+        self.xGA = 0 # expected Goals Against (for players team)
 
-        self.fixture = rawData[19] # fixture
+        self.fixture = rawData[19] # fixture difficulty
         self.wasHome = rawData[35] # was player home or away
         self.points = int(rawData[30]) # points earned by player
         self.performances = [] # list of performances
 
         self.form = self.calculateForm() # form of player
+
+
 
     def update(self, rawData):
         """Update the player object variables"""
