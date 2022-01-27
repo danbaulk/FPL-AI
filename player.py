@@ -24,7 +24,7 @@ class Player:
         self.fixture = rawData[19] # fixture difficulty
         self.wasHome = rawData[35] # was player home or away
         self.points = int(rawData[30]) # points earned by player
-        self.performances = [] # list of performances
+        self.performances = [] # list of recent performances (max 4)
 
         self.form = self.calculateForm() # form of player
 
@@ -48,7 +48,6 @@ class Player:
 
     def calculateForm(self):
         """calculate recent form of player based on their recent performances"""
-
         self.performances.append(self.points) # add the points earned to list of performances
         if len(self.performances) > 4:
             self.performances.pop(0) # if performances list is greater than 4 then pop the oldest
@@ -56,5 +55,5 @@ class Player:
         form = 0
         for points in self.performances:
             form += points
-        form = form / 4 # calculate form as an average of the 4 most recent performances
+        form = form / len(self.performances) # calculate form as an average of the max 4 most recent performances
         return form
