@@ -31,7 +31,7 @@ class Player:
 
 
     def update(self, rawData):
-        """Update the player object variables"""
+        """update the player object variables"""
         self.season = rawData[1]
         self.gw = rawData[37]
         self.pos = rawData[3]

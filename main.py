@@ -8,20 +8,20 @@ import player
 with open('Data/Data.csv', newline='') as Data:
     reader = csv.reader(Data)
     DataSet = list(reader)
-    DataSet = DataSet[1:] # Exclude first row - this is the headings for the data
+    DataSet = DataSet[1:] # exclude first row - this is the headings for the data
 
 for row in DataSet:
     currentPlayer = None # current player object
-    # check if the player already exists in the list of player objects
+
+    # keep playerDB up to date, and assign the currentPlayer object
     for existingPlayer in player.playerDB:
         if existingPlayer.name == row[2]:
             existingPlayer.update(row) # update the object with new data
             currentPlayer = existingPlayer
             break
-    else:
-        player1 = player.Player(row)
-        player.playerDB.append(player1) # add the player to the DB
-        currentPlayer = player1
-
-print(currentPlayer.performances)
-print(currentPlayer.form)
+        else:
+            player1 = player.Player(row)
+            player.playerDB.append(player1) # add the player to the DB
+            currentPlayer = player1
+    
+    # using the currentPlayer object
