@@ -13,15 +13,17 @@ with open('Data/Data.csv', newline='') as Data:
 for row in DataSet:
     currentPlayer = None # current player object
 
-    # keep playerDB up to date, and assign the currentPlayer object
+    # keep playerDB up to date
     for existingPlayer in player.playerDB:
         if existingPlayer.name == row[2]:
             existingPlayer.update(row) # update the object with new data
             currentPlayer = existingPlayer
             break
-        else:
-            player1 = player.Player(row)
-            player.playerDB.append(player1) # add the player to the DB
-            currentPlayer = player1
     
-    # using the currentPlayer object
+    # create a player object from the row in the dataset and add it to the playerDB if it doesn't exist in the playerDB
+    else:
+        player1 = player.Player(row)
+        player.playerDB.append(player1) # add the player to the DB
+        currentPlayer = player1
+    
+    
