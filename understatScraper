@@ -1,0 +1,31 @@
+"""
+testing the understat scraping
+"""
+import asyncio
+import json
+import aiohttp
+from understat import Understat
+
+async def main():
+    async with aiohttp.ClientSession() as session:
+        understat = Understat(session)
+
+        # get xG and xA for a player in a given match
+        data = await understat.get_player_matches(1250, {"season": "2018", "date": "2018-09-15"})
+        print (json.dumps(data))
+        print("xG:", data[0]["xG"])
+        print("xA:", data[0]["xA"])
+
+        # get xGC for a team in a given match
+        data = await understat.get_team_results("Manchester United", 2018, datetime = "2018-08-10 22:00:00")
+        print (json.dumps(data))
+        home = data[0]["h"]["title"]
+
+        if (home == "Manchester United"):
+            print("xGC:", data[0]["xG"]["a"])
+        else:
+            print("xGC:", data[0]["xG"]["h"])
+
+
+loop = asyncio.get_event_loop()
+loop.run_until_complete(main())
