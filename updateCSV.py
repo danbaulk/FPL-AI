@@ -38,7 +38,6 @@ async def main(season, name, dateTime, fixture):
 
         if (home == fixture):
             xGC = data["xG"]["h"]
-            print("xGC:", data["xG"]["h"])
         else:
             xGC = data["xG"]["a"]
         
