@@ -41,9 +41,9 @@ async def main(season, name, dateTime, fixture):
             print("xGC:", data["xG"]["h"])
         else:
             xGC = data["xG"]["a"]
-            print("xGC:", data["xG"]["a"])
-
         
+        print(count)
+
         return xG, xA, xGC
 
 
@@ -53,6 +53,8 @@ with open('Data/NewNames.csv', newline='') as Data:
     DataSet = list(reader)
     header = DataSet[0] # save the header to be added later
     DataSet = DataSet[1:] # exclude first row - this is the headings for the data
+
+    count = 0
 
 # for each row in the DataSet calculate form 
 for row in DataSet:
@@ -82,6 +84,8 @@ for row in DataSet:
 
     # using the current player and row, add the form value to the row
     row.extend([currentPlayer.form, currentPlayer.xG, currentPlayer.xA, currentPlayer.xGC])
+
+    count = count + 1
 
 
 # once the DataSet has been updated, write it to a csv file
