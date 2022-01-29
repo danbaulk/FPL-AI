@@ -3,6 +3,7 @@ run this script to update the form in the data.csv
 this script will only need to be run once, in order to update the csv file
 """
 import csv
+from sre_constants import SUCCESS
 import player
 import asyncio
 import json
@@ -13,41 +14,42 @@ async def main(season, name, dateTime, fixture):
     """given the season, player name and date of the match, return the players xG, xA and teams xGC"""
     async with aiohttp.ClientSession() as session:
         understat = Understat(session)
-
         date = dateTime[0]
+        success = True # if the understat data was retrieved
 
-        # get understat ID of a player name
-        # returns an empty list if the name is not found
-        data = await understat.get_league_players("epl", season, player_name = name)
-        ID = data[0]["id"]
-        
-        # get xG and xA for a player in a given match
-        data = await understat.get_player_matches(ID, {"season": str(season), "date": date})
-        xG = data[0]["xG"]
-        xA = data[0]["xA"]
+        try:
+            # get understat ID of a player name
+            # returns an empty list if the name is not found
+            data = await understat.get_league_players("epl", season, player_name = name)
+            ID = data[0]["id"]
+            
+            # get xG and xA for a player in a given match
+            data = await understat.get_player_matches(ID, {"season": str(season), "date": date})
+            xG = data[0]["xG"]
+            xA = data[0]["xA"]
 
-        # get xGC for a team in a given match
-        data = await understat.get_team_results(fixture, season)
-        # dateTime and understat datetime sometimes disagree on exact kickoff time, fix by comparing the date
-        for game in data:
-            USdate = game["datetime"]
-            if date in USdate:
-                data = game
+            # get xGC for a team in a given match
+            data = await understat.get_team_results(fixture, season)
+            # dateTime and understat datetime sometimes disagree on exact kickoff time, fix by comparing the date
+            for game in data:
+                USdate = game["datetime"]
+                if date in USdate:
+                    data = game
 
-        home = data["h"]["title"]
+            home = data["h"]["title"]
 
-        if (home == fixture):
-            xGC = data["xG"]["h"]
-        else:
-            xGC = data["xG"]["a"]
-        
-        print(count)
+            if (home == fixture):
+                xGC = data["xG"]["h"]
+            else:
+                xGC = data["xG"]["a"]
+        except:
+            success = False
 
-        return xG, xA, xGC
+        return xG, xA, xGC, success
 
 
 # read data from the specifed file into a list called DataSet
-with open('Data/NewNames.csv', newline='') as Data:
+with open('Data/NewNamesDev.csv', newline='') as Data:
     reader = csv.reader(Data)
     DataSet = list(reader)
     header = DataSet[0] # save the header to be added later
@@ -58,6 +60,7 @@ with open('Data/NewNames.csv', newline='') as Data:
 # for each row in the DataSet calculate form 
 for row in DataSet:
     currentPlayer = None # current player object
+    success = True # whether or not the understat data could be retrieved
 
     # keep playerDB up to date
     for existingPlayer in player.playerDB:
@@ -76,15 +79,18 @@ for row in DataSet:
     if (row[17] != "0"):
         loop = asyncio.get_event_loop()
         understatData = loop.run_until_complete(main(currentPlayer.season, currentPlayer.name, currentPlayer.date, currentPlayer.fixture))
-
+        
+        success = understatData[3]
         currentPlayer.xG = understatData[0]
         currentPlayer.xA = understatData[1]
         currentPlayer.xGC = understatData[2]
 
-    # using the current player and row, add the form value to the row
-    row.extend([currentPlayer.form, currentPlayer.xG, currentPlayer.xA, currentPlayer.xGC])
-
-    count = count + 1
+    # using the current player and row, add the supplemented data to the row
+    # only add the data if the understat data could be retrieved
+    if (success):
+        row.extend([currentPlayer.form, currentPlayer.xG, currentPlayer.xA, currentPlayer.xGC])
+        count = count + 1
+        print (count)
 
 
 # once the DataSet has been updated, write it to a csv file
