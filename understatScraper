@@ -4,14 +4,63 @@ testing the understat scraping
 import asyncio
 import json
 import aiohttp
+from pytest import fixture
 from understat import Understat
 
-async def main():
+async def main(season, name, dateTime):
     async with aiohttp.ClientSession() as session:
         understat = Understat(session)
 
+        date = dateTime[0]
+
+        # get understat ID of a player name
+        # returns an empty list if the name is not found
+        data = await understat.get_league_players("epl", season, player_name = name)
+        print (json.dumps(data))
+        ID = data[0]["id"]
+        team = data[0]["team_title"]
+        print("ID:", ID)
+        print("Team:", team)
+        
+
         # get xG and xA for a player in a given match
-        data = await understat.get_player_matches(1250, {"season": "2018", "date": "2018-09-15"})
+        data = await understat.get_player_matches(ID, {"season": str(season), "date": date})
+        xG = data[0]["xG"]
+        xA = data[0]["xA"]
+        print("xG:", xG)
+        print("xA:", xA)
+
+        # get xGC for a team in a given match
+        data = await understat.get_team_results(team, season)
+        for game in data:
+            USdate = game["datetime"]
+            if date in USdate:
+                data = game
+
+        home = data["h"]["title"]
+
+        if (home == team):
+            xGC = data["xG"]["a"]
+            print("xGC:", data["xG"]["a"])
+        else:
+            xGC = data["xG"]["h"]
+            print("xGC:", data["xG"]["h"])
+
+
+loop = asyncio.get_event_loop()
+loop.run_until_complete(main('2016', 'Adrián', ['2016-08-15', '19:00:00']))
+
+
+"""
+example of how to use it
+# get understat ID of a player name
+        # returns an empty list if the name is not found
+        data = await understat.get_league_players("epl", 2018, player_name="Paul Pogba")
+        print (json.dumps(data))
+        print("ID:", data[0]["id"])
+
+        # get xG and xA for a player in a given match
+        data = await understat.get_player_matches(1740, {"season": "2018", "date": "2018-09-15"})
         print (json.dumps(data))
         print("xG:", data[0]["xG"])
         print("xA:", data[0]["xA"])
@@ -25,7 +74,4 @@ async def main():
             print("xGC:", data[0]["xG"]["a"])
         else:
             print("xGC:", data[0]["xG"]["h"])
-
-
-loop = asyncio.get_event_loop()
-loop.run_until_complete(main())
+"""
