@@ -6,8 +6,9 @@ playerDB = [] # maintain a list of player objects
 class Player:
     def __init__(self, rawData):
         """constructor for Player"""
-        self.season = rawData[1] # season played
+        self.season = rawData[1][:4] # season played (first 4 letters of the string)
         self.gw = rawData[37] # gameweek
+        self.date = rawData[16][:-1].split("T") # date and time of the game - reformatted
 
         self.name = rawData[2] # name of player
         self.pos = rawData[3] # position of player
@@ -17,9 +18,9 @@ class Player:
         self.creativity = rawData[9] # creativity score for player
         self.threat = rawData[29] # threat score for player
         self.ict = rawData[14] # ICT index score for player
-        # TODO
-        self.xGI = 0 # expected Goal Involvement
-        self.xGA = 0 # expected Goals Against (for players team)
+        self.xG = 0 # expected Goals
+        self.xA = 0 # expected Assists
+        self.xGC = 0 # expected Goals Conceded (for players team in that match)
 
         self.fixture = rawData[19] # fixture difficulty
         self.wasHome = rawData[35] # was player home or away
@@ -32,8 +33,9 @@ class Player:
 
     def update(self, rawData):
         """update the player object variables"""
-        self.season = rawData[1]
+        self.season = rawData[1][:4]
         self.gw = rawData[37]
+        self.date = rawData[16][:-1].split("T")
         self.pos = rawData[3]
         self.value = rawData[34]
         self.influence = rawData[15]

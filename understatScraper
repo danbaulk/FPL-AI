@@ -7,7 +7,7 @@ import aiohttp
 from pytest import fixture
 from understat import Understat
 
-async def main(season, name, dateTime):
+async def main(season, name, dateTime, fixture):
     async with aiohttp.ClientSession() as session:
         understat = Understat(session)
 
@@ -16,22 +16,20 @@ async def main(season, name, dateTime):
         # get understat ID of a player name
         # returns an empty list if the name is not found
         data = await understat.get_league_players("epl", season, player_name = name)
-        print (json.dumps(data))
         ID = data[0]["id"]
-        team = data[0]["team_title"]
         print("ID:", ID)
-        print("Team:", team)
         
 
         # get xG and xA for a player in a given match
         data = await understat.get_player_matches(ID, {"season": str(season), "date": date})
         xG = data[0]["xG"]
         xA = data[0]["xA"]
+        print (json.dumps(data))
         print("xG:", xG)
         print("xA:", xA)
 
         # get xGC for a team in a given match
-        data = await understat.get_team_results(team, season)
+        data = await understat.get_team_results(fixture, season)
         for game in data:
             USdate = game["datetime"]
             if date in USdate:
@@ -39,16 +37,17 @@ async def main(season, name, dateTime):
 
         home = data["h"]["title"]
 
-        if (home == team):
-            xGC = data["xG"]["a"]
-            print("xGC:", data["xG"]["a"])
-        else:
+        if (home == fixture):
             xGC = data["xG"]["h"]
             print("xGC:", data["xG"]["h"])
+        else:
+            xGC = data["xG"]["a"]
+            print("xGC:", data["xG"]["a"])
+
 
 
 loop = asyncio.get_event_loop()
-loop.run_until_complete(main('2016', 'Adrián', ['2016-08-15', '19:00:00']))
+loop.run_until_complete(main('2016', 'Adrián', ['2016-08-15', '19:00:00'], 'Chelsea'))
 
 
 """
