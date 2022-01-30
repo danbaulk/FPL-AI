@@ -14,17 +14,20 @@ DataSet = [['2016', 'Adrián', ['2016-08-15', '19:00:00'], 'Chelsea'],
 ['2016', 'Adrián', ['2016-08-15', '19:00:00'], 'Chelsea']]
 
 async def getID(understat, season, name):
+    """get the understat ID of the player"""
     data = await understat.get_league_players("epl", season, player_name = name)
     ID = data[0]["id"] 
     return ID
 
-async def getPlayer(understat, ID, season, date):
+async def getXGI(understat, ID, season, date):
+    """get the expected goals and expected assists of the player"""
     data = await understat.get_player_matches(ID, {"season": str(season), "date": date})
     xG = data[0]["xG"]
     xA = data[0]["xA"]
     return xG, xA
 
-async def getTeam(understat, fixture, season, date):
+async def getXGC(understat, fixture, season, date):
+    """get the expected goals conceded"""
     data = await understat.get_team_results(fixture, season)
     for game in data:
         USdate = game["datetime"]
@@ -38,38 +41,44 @@ async def getTeam(understat, fixture, season, date):
         xGC = data["xG"]["a"]
     return xGC
 
-async def main(season, name, dateTime, fixture):
+async def main(data):
+    """attempt to get the understat data of the player"""
     async with aiohttp.ClientSession() as session:
-        success = True
-        ID = ['0']
-        stats = [('0', '0'), '0']
         understat = Understat(session)
-        date = dateTime[0]
-
+        date = data[2][0]
+    
         try:
-            ID = await asyncio.gather(getID(understat, season, name))
-            stats = await asyncio.gather(getPlayer(understat, ID[0], season, date), getTeam(understat, fixture, season, date))
+            ID = await asyncio.gather(getID(understat, data[0], data[1]))
+            understatData = await asyncio.gather(getXGI(understat, ID[0], data[0], date), getXGC(understat, data[3], data[0], date))
+            xG = understatData[0][0]
+            xA = understatData[0][1]
+            xGC = understatData[1]
         except:
-            success = False
+            ID = 'FAIL'
+            xG = 'FAIL'
+            xA = 'FAIL'
+            xGC = 'FAIL'
+        
+        data.extend([xG, xA, xGC, ID])
+        return data
 
-        return ID[0], stats[0][0], stats[0][1], stats[1]
+# limit the number of simultaneous API calls to 100
+sem = asyncio.Semaphore(100)
+async def safe_main(row):
+    async with sem:  # semaphore limits num of simultaneous API calls
+        return await asyncio.gather(main(row))
 
 async def getUSdata():
     tasks = []
     for row in DataSet:
-        tasks.append(asyncio.ensure_future(main(row[0], row[1], row[2], row[3])))
-               
-    USdata = await asyncio.gather(*tasks)
+        tasks.append(asyncio.ensure_future(safe_main(row)))
 
-    # the dataset and the understat data lists need to be of same length and ordered identically
-    while i < len(DataSet):
-        i = i + 1
-        DataSet[i].extend([USdata[i][0], USdata[i][1], USdata[i][2], USdata[i][3]])     
+    updatedData = await asyncio.gather(*tasks)
+    return updatedData
             
-
 loop = asyncio.get_event_loop()
-understatData = loop.run_until_complete(getUSdata())
-
+updatedData = loop.run_until_complete(getUSdata())
+print(updatedData)
 
 """
 example of how to use it

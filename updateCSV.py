@@ -40,9 +40,7 @@ async def getXGC(understat, fixture, season, date):
 async def main(data):
     """attempt to get the understat data of the player"""
     async with aiohttp.ClientSession() as session:
-        currentPlayer = None # current player object
-        success = True # whether or not the understat data could be retrieved
-        
+        currentPlayer = None # current player object       
         player1 = player.Player(data)
         currentPlayer = player1
 
@@ -51,18 +49,19 @@ async def main(data):
         
         try:
             ID = await asyncio.gather(getID(understat, currentPlayer.season, currentPlayer.name))
-            understatData = await asyncio.gather(getXGI(understat, ID[0], currentPlayer.season, currentPlayer.date), getXGC(understat, currentPlayer.fixture, currentPlayer.season, currentPlayer.date))
+            understatData = await asyncio.gather(getXGI(understat, ID[0], currentPlayer.season, date), getXGC(understat, currentPlayer.fixture, currentPlayer.season, date))
+            currentPlayer.ID = ID
+            currentPlayer.xG = understatData[0][0]
+            currentPlayer.xA = understatData[0][1]
+            currentPlayer.xGC = understatData[1]
         except:
-            success = False
+            currentPlayer.ID = 'FAIL'
+            currentPlayer.xG = 'FAIL'
+            currentPlayer.xA = 'FAIL'
+            currentPlayer.xGC = 'FAIL'
         
-        if success:
-            currentPlayer.ID = understatData[0]
-            currentPlayer.xG = understatData[1]
-            currentPlayer.xA = understatData[2]
-            currentPlayer.xGC = understatData[3]
-
-            data.extend([currentPlayer.xG, currentPlayer.xA, currentPlayer.xGC, currentPlayer.ID])
-            return data
+        data.extend([currentPlayer.xG, currentPlayer.xA, currentPlayer.xGC, currentPlayer.ID])
+        return data
 
 
 # read data from the specifed file into a list called DataSet
