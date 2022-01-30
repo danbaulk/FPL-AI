@@ -7,13 +7,15 @@ import aiohttp
 from pytest import fixture
 from understat import Understat
 
-name_id = {}
+DataSet = [['2016', 'Adrián', ['2016-08-15', '19:00:00'], 'Chelsea'],
+['2016', 'Adrián', ['2016-08-15', '19:00:00'], 'Chelsea'],
+['2016', 'Adrián', ['2016-08-15', '19:00:00'], 'Chelsea'],
+['2016', 'Adrián', ['2016-08-15', '19:00:00'], 'Chelsea'],
+['2016', 'Adrián', ['2016-08-15', '19:00:00'], 'Chelsea']]
 
 async def getID(understat, season, name):
     data = await understat.get_league_players("epl", season, player_name = name)
-    ID = data[0]["id"] # add the name and id to the dictionary for quicker lookups
-    name_id[name] = ID
-
+    ID = data[0]["id"] 
     return ID
 
 async def getPlayer(understat, ID, season, date):
@@ -52,9 +54,21 @@ async def main(season, name, dateTime, fixture):
 
         return ID[0], stats[0][0], stats[0][1], stats[1]
 
+async def getUSdata():
+    tasks = []
+    for row in DataSet:
+        tasks.append(asyncio.ensure_future(main(row[0], row[1], row[2], row[3])))
+               
+    USdata = await asyncio.gather(*tasks)
+
+    # the dataset and the understat data lists need to be of same length and ordered identically
+    while i < len(DataSet):
+        i = i + 1
+        DataSet[i].extend([USdata[i][0], USdata[i][1], USdata[i][2], USdata[i][3]])     
+            
+
 loop = asyncio.get_event_loop()
-stats = loop.run_until_complete(main('2016', 'Adrián', ['2016-08-15', '19:00:00'], 'Chelsea'))
-print(stats)
+understatData = loop.run_until_complete(getUSdata())
 
 
 """
