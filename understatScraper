@@ -7,47 +7,54 @@ import aiohttp
 from pytest import fixture
 from understat import Understat
 
+name_id = {}
+
+async def getID(understat, season, name):
+    data = await understat.get_league_players("epl", season, player_name = name)
+    ID = data[0]["id"] # add the name and id to the dictionary for quicker lookups
+    name_id[name] = ID
+
+    return ID
+
+async def getPlayer(understat, ID, season, date):
+    data = await understat.get_player_matches(ID, {"season": str(season), "date": date})
+    xG = data[0]["xG"]
+    xA = data[0]["xA"]
+    return xG, xA
+
+async def getTeam(understat, fixture, season, date):
+    data = await understat.get_team_results(fixture, season)
+    for game in data:
+        USdate = game["datetime"]
+        if date in USdate:
+            data = game
+
+    home = data["h"]["title"]
+    if (home == fixture):
+        xGC = data["xG"]["h"]
+    else:
+        xGC = data["xG"]["a"]
+    return xGC
+
 async def main(season, name, dateTime, fixture):
     async with aiohttp.ClientSession() as session:
+        success = True
+        ID = ['0']
+        stats = [('0', '0'), '0']
         understat = Understat(session)
-
         date = dateTime[0]
 
-        # get understat ID of a player name
-        # returns an empty list if the name is not found
-        data = await understat.get_league_players("epl", season, player_name = name)
-        ID = data[0]["id"]
-        print("ID:", ID)
-        
+        try:
+            ID = await asyncio.gather(getID(understat, season, name))
+            stats = await asyncio.gather(getPlayer(understat, ID[0], season, date), getTeam(understat, fixture, season, date))
+        except:
+            success = False
 
-        # get xG and xA for a player in a given match
-        data = await understat.get_player_matches(ID, {"season": str(season), "date": date})
-        xG = data[0]["xG"]
-        xA = data[0]["xA"]
-        print (json.dumps(data))
-        print("xG:", xG)
-        print("xA:", xA)
-
-        # get xGC for a team in a given match
-        data = await understat.get_team_results(fixture, season)
-        for game in data:
-            USdate = game["datetime"]
-            if date in USdate:
-                data = game
-
-        home = data["h"]["title"]
-
-        if (home == fixture):
-            xGC = data["xG"]["h"]
-            print("xGC:", data["xG"]["h"])
-        else:
-            xGC = data["xG"]["a"]
-            print("xGC:", data["xG"]["a"])
-
-
+        return ID[0], stats[0][0], stats[0][1], stats[1]
 
 loop = asyncio.get_event_loop()
-loop.run_until_complete(main('2016', 'Adrián', ['2016-08-15', '19:00:00'], 'Chelsea'))
+stats = loop.run_until_complete(main('2016', 'Adrián', ['2016-08-15', '19:00:00'], 'Chelsea'))
+print(stats)
 
 
 """

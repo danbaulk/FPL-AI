@@ -3,58 +3,71 @@ run this script to update the form in the data.csv
 this script will only need to be run once, in order to update the csv file
 """
 import csv
-from sre_constants import SUCCESS
 import player
 import asyncio
 import json
 import aiohttp
 from understat import Understat
 
+# dictionary matching names to understat IDs
+name_id = {}
+
+async def getID(understat, season, name):
+    """get the understat ID of the player"""
+    if (name in name_id):
+        ID = name_id[name]
+    else:
+        data = await understat.get_league_players("epl", season, player_name = name)
+        ID = data[0]["id"] # add the name and id to the dictionary for quicker lookups
+        name_id[name] = ID
+    return ID
+
+async def getXGI(understat, ID, season, date):
+    """get the expected goals and expected assists of the player"""
+    data = await understat.get_player_matches(ID, {"season": str(season), "date": date})
+    xG = data[0]["xG"]
+    xA = data[0]["xA"]
+    return xG, xA
+
+async def getXGC(understat, fixture, season, date):
+    """get the expected goals conceded"""
+    data = await understat.get_team_results(fixture, season)
+    for game in data:
+        USdate = game["datetime"]
+        if date in USdate:
+            data = game
+
+    home = data["h"]["title"]
+    if (home == fixture):
+        xGC = data["xG"]["h"]
+    else:
+        xGC = data["xG"]["a"]
+    return xGC
+
 async def main(season, name, dateTime, fixture):
-    """given the season, player name and date of the match, return the players xG, xA and teams xGC"""
+    """attempt to get the understat data of the player"""
     async with aiohttp.ClientSession() as session:
+        success = True
+        ID = ['0']
+        stats = [('0', '0'), '0']
         understat = Understat(session)
         date = dateTime[0]
-        success = True # if the understat data was retrieved
 
         try:
-            # get understat ID of a player name
-            # returns an empty list if the name is not found
-            data = await understat.get_league_players("epl", season, player_name = name)
-            ID = data[0]["id"]
-            
-            # get xG and xA for a player in a given match
-            data = await understat.get_player_matches(ID, {"season": str(season), "date": date})
-            xG = data[0]["xG"]
-            xA = data[0]["xA"]
-
-            # get xGC for a team in a given match
-            data = await understat.get_team_results(fixture, season)
-            # dateTime and understat datetime sometimes disagree on exact kickoff time, fix by comparing the date
-            for game in data:
-                USdate = game["datetime"]
-                if date in USdate:
-                    data = game
-
-            home = data["h"]["title"]
-
-            if (home == fixture):
-                xGC = data["xG"]["h"]
-            else:
-                xGC = data["xG"]["a"]
+            ID = await asyncio.gather(getID(understat, season, name))
+            stats = await asyncio.gather(getXGI(understat, ID[0], season, date), getXGC(understat, fixture, season, date))
         except:
             success = False
 
-        return xG, xA, xGC, success
+        return ID[0], stats[0][0], stats[0][1], stats[1], success
 
 
 # read data from the specifed file into a list called DataSet
-with open('Data/NewNamesDev.csv', newline='') as Data:
+with open('Data/CleanedData.csv', newline='') as Data:
     reader = csv.reader(Data)
     DataSet = list(reader)
     header = DataSet[0] # save the header to be added later
     DataSet = DataSet[1:] # exclude first row - this is the headings for the data
-
     count = 0
 
 # for each row in the DataSet calculate form 
@@ -80,23 +93,27 @@ for row in DataSet:
         loop = asyncio.get_event_loop()
         understatData = loop.run_until_complete(main(currentPlayer.season, currentPlayer.name, currentPlayer.date, currentPlayer.fixture))
         
-        success = understatData[3]
-        currentPlayer.xG = understatData[0]
-        currentPlayer.xA = understatData[1]
-        currentPlayer.xGC = understatData[2]
+        # using the current player and row, add the supplemented data to the row
+        # only add the data if the understat data could be retrieved
+        success = understatData[4]
+        if (success):
+            currentPlayer.ID = understatData[0]
+            currentPlayer.xG = understatData[1]
+            currentPlayer.xA = understatData[2]
+            currentPlayer.xGC = understatData[3]
 
-    # using the current player and row, add the supplemented data to the row
-    # only add the data if the understat data could be retrieved
-    if (success):
-        row.extend([currentPlayer.form, currentPlayer.xG, currentPlayer.xA, currentPlayer.xGC])
-        count = count + 1
-        print (count)
+            row.extend([currentPlayer.form, currentPlayer.xG, currentPlayer.xA, currentPlayer.xGC, currentPlayer.ID])
+            count = count + 1
+            print (count)
+        else:
+            # if the understat data couldnt be retrieved, remove the row
+            DataSet.remove(row)
 
 
 # once the DataSet has been updated, write it to a csv file
 with open('UpdatedData.csv', 'w', newline='') as f:
     writer = csv.writer(f)
-    header.append('form', 'xG', 'xA', 'xGC')
+    header.append('form', 'xG', 'xA', 'xGC', 'ID')
     writer.writerow(header)
 
     for row in DataSet:

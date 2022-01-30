@@ -11,6 +11,7 @@ class Player:
         self.date = rawData[16][:-1].split("T") # date and time of the game - reformatted
 
         self.name = rawData[2] # name of player
+        self.ID = 0 # understat ID
         self.pos = rawData[3] # position of player
         self.value = rawData[34] # value of player
 
