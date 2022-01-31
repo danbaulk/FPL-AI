@@ -38,19 +38,32 @@ async def getXGC(understat, fixture, season, date):
     return xGC
 
 async def main(data):
-    """attempt to get the understat data of the player"""
+    """attempt to get the understat data of the player and calculate form"""
     async with aiohttp.ClientSession() as session:
-        currentPlayer = None # current player object       
-        player1 = player.Player(data)
-        currentPlayer = player1
+        currentPlayer = None # current player object   
+        previousForm = 0 # the players form going into this game
+
+        # keep playerDB up to date
+        for existingPlayer in player.playerDB:
+            if existingPlayer.name == data[2]:
+                previousForm = existingPlayer.form # update the form to be their form going into this game
+                existingPlayer.update(data) # update the object with new data
+                currentPlayer = existingPlayer
+                break
+    
+        # create a player object from the row in the dataset and add it to the playerDB if it doesn't exist in the playerDB
+        else:
+            player1 = player.Player(data)
+            player.playerDB.append(player1) # add the player to the DB
+            currentPlayer = player1
 
         understat = Understat(session)
         date = currentPlayer.date[0]
-        
+
         try:
             ID = await asyncio.gather(getID(understat, currentPlayer.season, currentPlayer.name))
             understatData = await asyncio.gather(getXGI(understat, ID[0], currentPlayer.season, date), getXGC(understat, currentPlayer.fixture, currentPlayer.season, date))
-            currentPlayer.ID = ID
+            currentPlayer.ID = ID[0]
             currentPlayer.xG = understatData[0][0]
             currentPlayer.xA = understatData[0][1]
             currentPlayer.xGC = understatData[1]
@@ -60,7 +73,7 @@ async def main(data):
             currentPlayer.xA = 'FAIL'
             currentPlayer.xGC = 'FAIL'
         
-        data.extend([currentPlayer.xG, currentPlayer.xA, currentPlayer.xGC, currentPlayer.ID])
+        data.extend([currentPlayer.xG, currentPlayer.xA, currentPlayer.xGC, currentPlayer.ID, previousForm])
         return data
 
 
@@ -71,8 +84,8 @@ with open('Data/CleanedData.csv', newline='') as Data:
     header = DataSet[0] # save the header to be added later
     DataSet = DataSet[1:] # exclude first row - this is the headings for the data
 
-# limit the number of simultaneous API calls to 100
-sem = asyncio.Semaphore(100)
+# limit the number of simultaneous API calls
+sem = asyncio.Semaphore(20)
 async def safe_main(row):
     async with sem:  # semaphore limits num of simultaneous API calls
         return await asyncio.gather(main(row))
@@ -92,8 +105,8 @@ updatedData = loop.run_until_complete(getUSdata())
 # once the DataSet has been updated, write it to a csv file
 with open('UpdatedData.csv', 'w', newline='') as f:
     writer = csv.writer(f)
-    header.extend(['xG', 'xA', 'xGC', 'ID'])
+    header.extend(['xG', 'xA', 'xGC', 'ID', 'Form'])
     writer.writerow(header)
 
     for row in updatedData:
-        writer.writerow(row)
+        writer.writerow(row[0])
