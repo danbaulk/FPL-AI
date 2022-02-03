@@ -1,5 +1,5 @@
 """
-player.py defines player class
+Player.py defines player class
 """
 playerDB = [] # maintain a list of player objects
 

@@ -3,7 +3,7 @@ run this script to the csv file with supplementary data
 this script will only need to be run once, in order to update the csv file
 """
 import csv
-import player
+import Player
 import asyncio
 import json
 import aiohttp
@@ -44,7 +44,7 @@ async def main(data):
         previousForm = 0 # the players form going into this game
 
         # keep playerDB up to date
-        for existingPlayer in player.playerDB:
+        for existingPlayer in Player.playerDB:
             if existingPlayer.name == data[2]:
                 previousForm = existingPlayer.form # update the form to be their form going into this game
                 existingPlayer.update(data) # update the object with new data
@@ -53,8 +53,8 @@ async def main(data):
     
         # create a player object from the row in the dataset and add it to the playerDB if it doesn't exist in the playerDB
         else:
-            player1 = player.Player(data)
-            player.playerDB.append(player1) # add the player to the DB
+            player1 = Player.Player(data)
+            Player.playerDB.append(player1) # add the player to the DB
             currentPlayer = player1
 
         understat = Understat(session)
