@@ -10,7 +10,7 @@ def ranWeight(n):
 
 class ANN:
     def __init__(self, arg):
-        """constructor for ANN with 1 hidden layer, 10/11 inputs and 1 output.
+        """constructor for ANN with 1 hidden layer, 10 inputs and 1 output.
         pass an integer x, to create a random model with x num nodes in the hidden layer
         pass a string y, which is a name of a saved model to load it"""
         
