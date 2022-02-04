@@ -9,6 +9,13 @@ import json
 import aiohttp
 from understat import Understat
 
+# the fixture difficulty dictionaries
+rating2016 = {"Chelsea": 10, "Tottenham": 10, "Manchester City": 9, "Liverpool": 9, "Arsenal": 8, "Manchester United": 8, "Everton": 7 , "Southampton": 7, "Bournemouth": 6, "West Bromwich Albion": 6, "West Ham": 5, "Leicester": 5, "Stoke": 4, "Crystal Palace": 4, "Swansea": 3, "Burnley": 3, "Watford": 2, "Hull": 2, "Middlesbrough": 1, "Sunderland": 1}
+rating2017 = {"Manchester City": 10, "Manchester United": 10, "Tottenham": 9, "Liverpool": 9, "Chelsea": 8, "Arsenal": 8, "Burnley": 7, "Everton": 7, "Leicester": 6, "Newcastle": 6, "Crystal Palace": 5, "Bournemouth": 5, "West Ham": 4,  "Watford": 4, "Brighton": 3, "Huddersfield": 3, "Southampton": 2, "Swansea": 2, "Stoke": 1, "West Bromwich Albion": 1}
+rating2018 = {"Manchester City": 10, "Liverpool": 10, "Chelsea": 9, "Tottenham": 9, "Arsenal": 8, "Manchester United": 8, "Wolves": 7, "Everton": 7, "Leicester": 6, "West Ham": 6, "Watford": 5, "Crystal Palace": 5, "Newcastle": 4,  "Bournemouth": 4, "Burnley": 3, "Southampton": 3, "Brighton": 2, "Cardiff": 2, "Fulham": 1, "Huddersfield": 1}
+rating2019 = {"Liverpool": 10, "Manchester City": 10, "Manchester United": 9, "Chelsea": 9, "Leicester": 8, "Tottenham": 8, "Wolves": 7, "Arsenal": 7, "Sheffield Utd": 6, "Burnley": 6, "Southampton": 5, "Everton": 5, "Newcastle": 4,  "Crystal Palace": 4, "Brighton": 3, "West Ham": 3, "Aston Villa": 2, "Bournemouth": 2, "Watford": 1, "Norwich": 1}
+rating2020 = {"Manchester City": 10, "Manchester United": 10, "Liverpool": 9, "Chelsea": 9, "Leicester": 8, "West Ham": 8, "Tottenham": 7, "Arsenal": 7, "Leeds": 6, "Everton": 6, "Aston Villa": 5, "Newcastle": 5, "Wolves": 4,  "Crystal Palace": 4, "Southampton": 3, "Brighton": 3, "Burnley": 2, "Fulham": 2, "West Bromwich Albion": 1, "Sheffield Utd": 1}
+
 async def getID(understat, season, name):
     """get the understat ID of the player"""
     data = await understat.get_league_players("epl", season, player_name = name)
@@ -60,6 +67,21 @@ async def main(data):
         understat = Understat(session)
         date = currentPlayer.date[0]
 
+        # switch case for season, replaces the fixture name with fixture difficulty using appropriate dictionary
+        fixture = currentPlayer.fixture
+        if currentPlayer.season == "2016":
+            currentPlayer.fixture = rating2016[fixture]
+        elif currentPlayer.season == "2017":
+            currentPlayer.fixture = rating2017[fixture]
+        elif currentPlayer.season == "2018":
+            currentPlayer.fixture = rating2018[fixture]
+        elif currentPlayer.season == "2019":
+            currentPlayer.fixture = rating2019[fixture]
+        elif currentPlayer.season == "2020":
+            currentPlayer.fixture = rating2020[fixture]
+        else:
+            print("Name mismatch")
+
         try:
             ID = await asyncio.gather(getID(understat, currentPlayer.season, currentPlayer.name))
             understatData = await asyncio.gather(getXGI(understat, ID[0], currentPlayer.season, date), getXGC(understat, currentPlayer.fixture, currentPlayer.season, date))
@@ -73,9 +95,8 @@ async def main(data):
             currentPlayer.xA = 'FAIL'
             currentPlayer.xGC = 'FAIL'
         
-        data.extend([currentPlayer.xG, currentPlayer.xA, currentPlayer.xGC, currentPlayer.ID, previousForm])
+        data.extend([currentPlayer.xG, currentPlayer.xA, currentPlayer.xGC, currentPlayer.ID, previousForm, currentPlayer.fixture])
         return data
-
 
 # read data from the specifed file into a list called DataSet
 with open('Data/CleanedData.csv', newline='') as Data:
@@ -105,7 +126,7 @@ updatedData = loop.run_until_complete(getUSdata())
 # once the DataSet has been updated, write it to a csv file
 with open('UpdatedData.csv', 'w', newline='') as f:
     writer = csv.writer(f)
-    header.extend(['xG', 'xA', 'xGC', 'ID', 'Form'])
+    header.extend(['xG', 'xA', 'xGC', 'ID', 'Form', 'Fixture'])
     writer.writerow(header)
 
     for row in updatedData:
