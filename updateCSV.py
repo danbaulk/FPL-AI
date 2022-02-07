@@ -81,6 +81,11 @@ async def main(data):
             currentPlayer.fixture = rating2020[fixture]
         else:
             print("Name mismatch")
+        
+        # convert home or away boolean to 1 or 0
+        h_a = 1
+        if currentPlayer.wasHome == "FALSE":
+            h_a = 0
 
         try:
             ID = await asyncio.gather(getID(understat, currentPlayer.season, currentPlayer.name))
@@ -95,7 +100,7 @@ async def main(data):
             currentPlayer.xA = 'FAIL'
             currentPlayer.xGC = 'FAIL'
         
-        data.extend([currentPlayer.xG, currentPlayer.xA, currentPlayer.xGC, currentPlayer.ID, previousForm, currentPlayer.fixture])
+        data.extend([currentPlayer.xG, currentPlayer.xA, currentPlayer.xGC, currentPlayer.ID, previousForm, currentPlayer.fixture, h_a])
         return data
 
 # read data from the specifed file into a list called DataSet
@@ -126,7 +131,7 @@ updatedData = loop.run_until_complete(getUSdata())
 # once the DataSet has been updated, write it to a csv file
 with open('UpdatedData.csv', 'w', newline='') as f:
     writer = csv.writer(f)
-    header.extend(['xG', 'xA', 'xGC', 'ID', 'Form', 'Fixture'])
+    header.extend(['xG', 'xA', 'xGC', 'ID', 'form', 'fixture', 'wasHome'])
     writer.writerow(header)
 
     for row in updatedData:
