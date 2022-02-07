@@ -131,7 +131,7 @@ updatedData = loop.run_until_complete(getUSdata())
 # once the DataSet has been updated, write it to a csv file
 with open('UpdatedData.csv', 'w', newline='') as f:
     writer = csv.writer(f)
-    header.extend(['xG', 'xA', 'xGC', 'ID', 'form', 'fixture', 'wasHome'])
+    header.extend(['xG', 'xA', 'xGC', 'ID', 'form', 'fixture', 'was_home'])
     writer.writerow(header)
 
     for row in updatedData:
