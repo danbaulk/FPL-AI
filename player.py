@@ -3,6 +3,21 @@ Player.py defines player class
 """
 playerDB = [] # maintain a list of player objects
 
+def addRecentStats(statsList, stat):
+    """add the recent stats of the player to their stats list and cap it at 4"""
+    statsList.append(stat) # add the points earned to list of performances
+    if len(statsList) > 4:
+        statsList.pop(0) # if performances list is greater than 4 then pop the oldest
+    return statsList
+
+def calcAvg(statsList):
+    """calculate the average of the recent stats list"""
+    avg = 0
+    for stat in statsList:
+        avg += stat
+    avg = avg / len(statsList) # calculate as an average of the max 4 most recent performances
+    return avg
+
 class Player:
     def __init__(self, rawData):
         """constructor for Player"""
@@ -15,23 +30,23 @@ class Player:
         self.pos = rawData[3] # position of player
         self.value = rawData[34] # value of player
 
-        self.influence = rawData[15] # influence score for player
-        self.creativity = rawData[9] # creativity score for player
-        self.threat = rawData[29] # threat score for player
-        self.ict = rawData[14] # ICT index score for player
-        self.xG = 0 # expected Goals
-        self.xA = 0 # expected Assists
-        self.xGC = 0 # expected Goals Conceded (for players team in that match)
+        # recent stats lists for the player (max 4)
+        self.influence = [float(rawData[15])] # influence score for player
+        self.creativity = [float(rawData[9])] # creativity score for player
+        self.threat = [float(rawData[29])] # threat score for player
+        self.ict = [float(rawData[14])] # ICT index score for player
+        self.xG = [0] # expected Goals
+        self.xA = [0] # expected Assists
+        self.xGC = [0] # expected Goals Conceded (for players team in that match)
 
         self.fixture = rawData[19] # fixture difficulty
         self.wasHome = rawData[35] # was player home or away
         self.points = int(rawData[30]) # points earned by player
-        self.performances = [] # list of recent performances (max 4)
+        self.performances = [int(rawData[30])] # list of recent performances (max 4)
 
-        self.form = self.calculateForm() # form of player
-
-
-
+        # the average stats of a player
+        self.form = self.avg_xG = self.avg_xA = self.avg_xGC = self.avg_I = self.avg_C = self.avg_T = self.avg_ICT = 0
+    
     def update(self, rawData):
         """update the player object variables"""
         self.season = rawData[1][:4]
@@ -39,24 +54,22 @@ class Player:
         self.date = rawData[16][:-1].split("T")
         self.pos = rawData[3]
         self.value = rawData[34]
-        self.influence = rawData[15]
-        self.creativity = rawData[9]
-        self.threat = rawData[29]
-        self.ict = rawData[14]
+        self.influence = addRecentStats(self.influence, float(rawData[15]))
+        self.creativity = addRecentStats(self.creativity, float(rawData[9]))
+        self.threat = addRecentStats(self.threat, float(rawData[29]))
+        self.ict = addRecentStats(self.ict, float(rawData[14]))
+        self.performances = addRecentStats(self.performances, int(rawData[30]))
         self.fixture = rawData[19]
         self.wasHome = rawData[35]
         self.points = int(rawData[30])
-        self.form = self.calculateForm()
 
-
-    def calculateForm(self):
-        """calculate recent form of player based on their recent performances"""
-        self.performances.append(self.points) # add the points earned to list of performances
-        if len(self.performances) > 4:
-            self.performances.pop(0) # if performances list is greater than 4 then pop the oldest
-        
-        form = 0
-        for points in self.performances:
-            form += points
-        form = form / len(self.performances) # calculate form as an average of the max 4 most recent performances
-        return form
+    def updateAvgs(self):
+        """update the avgs for when the understat data has been added"""
+        self.form = calcAvg(self.performances)
+        self.avg_xG = calcAvg(self.xG)
+        self.avg_xA = calcAvg(self.xA)
+        self.avg_xGC = calcAvg(self.xGC)
+        self.avg_I = calcAvg(self.influence)
+        self.avg_C = calcAvg(self.creativity)
+        self.avg_T = calcAvg(self.threat) 
+        self.avg_ICT = calcAvg(self.ict)
