@@ -5,7 +5,6 @@ this script will only need to be run once, in order to update the csv file
 import csv
 import Player
 import asyncio
-import json
 import aiohttp
 from understat import Understat
 
@@ -48,70 +47,99 @@ async def main(data):
     """attempt to get the understat data of the player and calculate form"""
     async with aiohttp.ClientSession() as session:
         currentPlayer = None # current player object   
-        previousForm = 0 # the players form going into this game
+        # the players average stats going into this game starts off as 0
+        form = avg_xG = avg_xA = avg_xGC = avg_I = avg_C = avg_T = avg_ICT = 0 
 
-        # keep playerDB up to date
-        for existingPlayer in Player.playerDB:
-            if existingPlayer.name == data[2]:
-                previousForm = existingPlayer.form # update the form to be their form going into this game
-                existingPlayer.update(data) # update the object with new data
-                currentPlayer = existingPlayer
-                break
-    
-        # create a player object from the row in the dataset and add it to the playerDB if it doesn't exist in the playerDB
-        else:
-            player1 = Player.Player(data)
-            Player.playerDB.append(player1) # add the player to the DB
-            currentPlayer = player1
-
+        # get the players new understat stats
         understat = Understat(session)
-        date = currentPlayer.date[0]
-
-        # switch case for season, replaces the fixture name with fixture difficulty using appropriate dictionary
-        fixture = currentPlayer.fixture
-        if currentPlayer.season == "2016":
-            currentPlayer.fixture = rating2016[fixture]
-        elif currentPlayer.season == "2017":
-            currentPlayer.fixture = rating2017[fixture]
-        elif currentPlayer.season == "2018":
-            currentPlayer.fixture = rating2018[fixture]
-        elif currentPlayer.season == "2019":
-            currentPlayer.fixture = rating2019[fixture]
-        elif currentPlayer.season == "2020":
-            currentPlayer.fixture = rating2020[fixture]
-        else:
-            print("Name mismatch")
-        
-        # convert home or away boolean to 1 or 0
-        h_a = 1
-        if currentPlayer.wasHome == "FALSE":
-            h_a = 0
+        date = data[16][:-1].split("T")[0]
+        season = data[1][:4]
+        name = data[2]
+        fixture = data[19]
+        ID = 0
+        xG = 0
+        xA = 0
+        xGC = 0
 
         try:
-            ID = await asyncio.gather(getID(understat, currentPlayer.season, currentPlayer.name))
-            understatData = await asyncio.gather(getXGI(understat, ID[0], currentPlayer.season, date), getXGC(understat, currentPlayer.fixture, currentPlayer.season, date))
-            currentPlayer.ID = ID[0]
-            currentPlayer.xG = understatData[0][0]
-            currentPlayer.xA = understatData[0][1]
-            currentPlayer.xGC = understatData[1]
-        except:
-            currentPlayer.ID = 'FAIL'
-            currentPlayer.xG = 'FAIL'
-            currentPlayer.xA = 'FAIL'
-            currentPlayer.xGC = 'FAIL'
+            ID = await asyncio.gather(getID(understat, season, name))
+            understatData = await asyncio.gather(getXGI(understat, ID[0], season, date), getXGC(understat, fixture, season, date))
+            ID = ID[0]
+            xG = float(understatData[0][0])
+            xA = float(understatData[0][1])
+            xGC = float(understatData[1])
+
+            # check the player exists in the DB, if so get their old averages and update it
+            for existingPlayer in Player.playerDB:
+                if existingPlayer.name == name:
+                    # save the players current averages to the local variables 
+                    form = existingPlayer.form
+                    avg_xG = existingPlayer.avg_xG
+                    avg_xA = existingPlayer.avg_xA
+                    avg_xGC = existingPlayer.avg_xGC
+                    avg_I = existingPlayer.avg_I
+                    avg_C = existingPlayer.avg_C
+                    avg_T = existingPlayer.avg_T
+                    avg_ICT = existingPlayer.avg_ICT
+
+                    # update the object with new data
+                    existingPlayer.update(data) 
+                    existingPlayer.xG = Player.addRecentStats(existingPlayer.xG, xG)
+                    existingPlayer.xA = Player.addRecentStats(existingPlayer.xA, xA)
+                    existingPlayer.xGC = Player.addRecentStats(existingPlayer.xGC, xGC)
+                    existingPlayer.updateAvgs() # update the averages
+
+                    currentPlayer = existingPlayer
+                    break
         
-        data.extend([currentPlayer.xG, currentPlayer.xA, currentPlayer.xGC, currentPlayer.ID, previousForm, currentPlayer.fixture, h_a])
+            # if they dont exist create a player object
+            else:
+                player1 = Player.Player(data)
+                Player.playerDB.append(player1) # add the player to the DB
+                currentPlayer = player1
+                # add the players understat data and calculate their average stats
+                currentPlayer.ID = ID
+                currentPlayer.xG = [xG]
+                currentPlayer.xA = [xA]
+                currentPlayer.xGC = [xGC]
+                currentPlayer.updateAvgs()
+
+            # switch case for season, replaces the fixture name with fixture difficulty using appropriate dictionary
+            if currentPlayer.season == "2016":
+                currentPlayer.fixture = rating2016[fixture]
+            elif currentPlayer.season == "2017":
+                currentPlayer.fixture = rating2017[fixture]
+            elif currentPlayer.season == "2018":
+                currentPlayer.fixture = rating2018[fixture]
+            elif currentPlayer.season == "2019":
+                currentPlayer.fixture = rating2019[fixture]
+            elif currentPlayer.season == "2020":
+                currentPlayer.fixture = rating2020[fixture]
+            else:
+                print("Name mismatch")
+            
+            # convert home or away boolean to 1 or 0
+            h_a = 1
+            if currentPlayer.wasHome == "FALSE":
+                h_a = 0
+            
+            data.extend([ID, xG, avg_xG, xA, avg_xA, xGC, avg_xGC, form, currentPlayer.fixture, h_a, avg_I, avg_C, avg_T, avg_ICT])
+
+        except:
+            # if there is missing understat data then we do not process this data entry
+            data.extend(['FAIL'])
+        
         return data
 
 # read data from the specifed file into a list called DataSet
-with open('Data/CleanedData.csv', newline='') as Data:
+with open('Data/CleanedDataBlanks.csv', newline='') as Data:
     reader = csv.reader(Data)
     DataSet = list(reader)
     header = DataSet[0] # save the header to be added later
     DataSet = DataSet[1:] # exclude first row - this is the headings for the data
 
 # limit the number of simultaneous API calls
-sem = asyncio.Semaphore(20)
+sem = asyncio.Semaphore(20) 
 async def safe_main(row):
     async with sem:  # semaphore limits num of simultaneous API calls
         return await asyncio.gather(main(row))
@@ -131,7 +159,7 @@ updatedData = loop.run_until_complete(getUSdata())
 # once the DataSet has been updated, write it to a csv file
 with open('UpdatedData.csv', 'w', newline='') as f:
     writer = csv.writer(f)
-    header.extend(['xG', 'xA', 'xGC', 'ID', 'form', 'fixture', 'was_home'])
+    header.extend(['ID', 'xG', 'avg_xG', 'xA', 'avg_xA', 'xGC', 'avg_xGC', 'form', 'fixture_difficulty', 'was_home', 'avg_I', 'avg_C', 'avg_T', 'avg_ICT'])
     writer.writerow(header)
 
     for row in updatedData:
