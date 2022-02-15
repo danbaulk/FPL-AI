@@ -1,5 +1,5 @@
 """
-Player.py defines player class
+Player.py defines player class, uses the formatting provided by merged_cleaned_seasons.csv in Vaastavs Git repo
 """
 playerDB = [] # maintain a list of player objects
 
@@ -19,33 +19,61 @@ def calcAvg(statsList):
     return avg
 
 class Player:
-    def __init__(self, rawData):
-        """constructor for Player"""
-        self.season = rawData[1][:4] # season played (first 4 letters of the string)
-        self.gw = rawData[37] # gameweek
-        self.date = rawData[16][:-1].split("T") # date and time of the game - reformatted
+    def __init__(self, *rawData):
+        """constructor for Player
+        pass no args, then a default player object is created
+        pass raw data, then the object is initalised with that data"""
 
-        self.name = rawData[2] # name of player
-        self.ID = 0 # understat ID
-        self.pos = rawData[3] # position of player
-        self.value = rawData[34] # value of player
+        if len(rawData) == 1:
+            # initialise an object using the raw data passed to the constructor
+            self.season = rawData[1][:4] # season played (first 4 letters of the string)
+            self.gw = rawData[37] # gameweek
+            self.date = rawData[16][:-1].split("T") # date and time of the game - reformatted
 
-        # recent stats lists for the player (max 4)
-        self.influence = [float(rawData[15])] # influence score for player
-        self.creativity = [float(rawData[9])] # creativity score for player
-        self.threat = [float(rawData[29])] # threat score for player
-        self.ict = [float(rawData[14])] # ICT index score for player
-        self.xG = [0] # expected Goals
-        self.xA = [0] # expected Assists
-        self.xGC = [0] # expected Goals Conceded (for players team in that match)
+            self.ID = 0 # FPL ID
+            self.name = rawData[2] # name of player
+            self.pos = rawData[3] # position of player
+            self.value = rawData[34] # value of player
 
-        self.fixture = rawData[19] # fixture difficulty
-        self.wasHome = rawData[35] # was player home or away
-        self.points = int(rawData[30]) # points earned by player
-        self.performances = [int(rawData[30])] # list of recent performances (max 4)
+            # recent stats lists for the player (max 4)
+            self.influence = [float(rawData[15])] # influence score for player
+            self.creativity = [float(rawData[9])] # creativity score for player
+            self.threat = [float(rawData[29])] # threat score for player
+            self.ict = [float(rawData[14])] # ICT index score for player
+            self.xG = [0] # expected Goals
+            self.xA = [0] # expected Assists
+            self.xGC = [0] # expected Goals Conceded (for players team in that match)
 
-        # the average stats of a player
-        self.form = self.avg_xG = self.avg_xA = self.avg_xGC = self.avg_I = self.avg_C = self.avg_T = self.avg_ICT = 0
+            self.fixture = rawData[19] # fixture difficulty
+            self.wasHome = rawData[35] # was player home or away
+            self.points = int(rawData[30]) # points earned by player
+            self.performances = [int(rawData[30])] # list of recent performances (max 4)
+
+            # the average stats of a player
+            self.form = self.avg_xG = self.avg_xA = self.avg_xGC = self.avg_I = self.avg_C = self.avg_T = self.avg_ICT = 0
+
+        else:
+            # initialise a blank object if no arguements are passed to constructor
+            self.season = "" 
+            self.gw = "" 
+            self.date = "" 
+            self.ID = 0
+            self.name = ""
+            self.pos = ""
+            self.value = ""
+            self.influence = []
+            self.creativity = []
+            self.threat = []
+            self.ict = []
+            self.xG = []
+            self.xA = []
+            self.xGC = []
+            self.fixture = ""
+            self.wasHome = ""
+            self.points = 0
+            self.performances = []
+            self.form = self.avg_xG = self.avg_xA = self.avg_xGC = self.avg_I = self.avg_C = self.avg_T = self.avg_ICT = 0
+            
     
     def update(self, rawData):
         """update the player object variables"""
