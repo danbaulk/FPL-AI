@@ -12,7 +12,7 @@ import aiohttp
 rating2021 = {"Manchester City": 10, "Liverpool": 10, "Chelsea": 9, "West Ham": 9, "Manchester United": 8, "Arsenal": 8, "Tottenham": 7, "Wolves": 7, "Brighton": 6, "Southampton": 6, "Aston Villa": 5, "Leicester": 5, "Crystal Palace": 4,  "Brentford": 4, "Leeds": 3, "Everton": 3, "Newcastle": 2, "Norwich": 2, "Watford": 1, "Burnley": 1}
 
 # team id and team name dictionary
-team_dict = {1: "Arsenal", 2: "Aston Villa", 3: "Brentford", 4: "Brighton", 5: "Burnley", 6: "Chelsea", 7: "Crystal Palace", 8: "Everton", 9: "Leicester", 10: "Leeds", 11: "Liverpool", 12: "Manchester City", 13: "Manchester United", 14: "Newcastle", 15: "Norwich", 16: "Southampton", 17: "Spurs", 18: "Watford", 19: "West Ham", 20: "Wolves"}
+team_dict = {1: "Arsenal", 2: "Aston Villa", 3: "Brentford", 4: "Brighton", 5: "Burnley", 6: "Chelsea", 7: "Crystal Palace", 8: "Everton", 9: "Leicester", 10: "Leeds", 11: "Liverpool", 12: "Manchester City", 13: "Manchester United", 14: "Newcastle", 15: "Norwich", 16: "Southampton", 17: "Tottenham", 18: "Watford", 19: "West Ham", 20: "Wolves"}
 
 # read the understat and FPL id data into a dictionary for faster lookups
 with open('id_dict.csv', newline='') as data:
@@ -72,6 +72,7 @@ url = 'https://fantasy.premierleague.com/api/bootstrap-static/'
 response = get(url)
 players = response['elements']
 
+
 # for each player who is available to play, create a player object and add their details
 for player in players:
     if player['status'] == 'a':
@@ -124,15 +125,37 @@ for player in players:
             home = 0
         team = team_dict[team]
         playerObj.fixture = rating2021[team_dict[opp]]
+        playerObj.wasHome = home
 
         # get their recent understat performance stats
-        season = 2021
-        understatID = id_dict[str(ID)]
-        loop = asyncio.get_event_loop()
-        retrievedData = loop.run_until_complete(main(season, understatID, team))
+        try:
+            season = 2021
+            understatID = id_dict[str(ID)]
+            loop = asyncio.get_event_loop()
+            retrievedData = loop.run_until_complete(main(season, understatID, team))
 
-        playerObj.avg_xG = Player.calcAvg(retrievedData[0])
-        playerObj.avg_xA = Player.calcAvg(retrievedData[1])
-        playerObj.avg_xGC = Player.calcAvg(retrievedData[2])
+            playerObj.avg_xG = Player.calcAvg(retrievedData[0])
+            playerObj.avg_xA = Player.calcAvg(retrievedData[1])
+            playerObj.avg_xGC = Player.calcAvg(retrievedData[2])
+        except:
+            print("Understat ID not found:", playerObj.name, ID)
+            playerObj.avg_xG = 'FAIL'
+            playerObj.avg_xA = 'FAIL'
+            playerObj.avg_xGC = 'FAIL'
 
         Player.playerDB.append(playerObj) # add the player to the DB
+
+
+
+# with all the players data in the playerDB output it to a file so it can be used by the model
+header = ['name', 'avg_xG', 'avg_xA', 'avg_xGC', 'avg_I', 'avg_C', 'avg_T', 'avg_ICT', 'fixture_difficulty', 'is_home', 'form']
+data = []
+for player in Player.playerDB:
+    data.append([player.name, player.avg_xG, player.avg_xA, player.avg_xGC, player.avg_I, player.avg_C, player.avg_T, player.avg_ICT, player.fixture, player.wasHome, player.form])
+
+with open('retrieved_data.csv', 'w', encoding="utf-8", newline='') as f:
+    writer = csv.writer(f)
+    writer.writerow(header)
+
+    for row in data:
+        writer.writerow(row)
