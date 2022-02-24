@@ -8,6 +8,9 @@ from understat import Understat
 import asyncio
 import aiohttp
 
+# position dictionary
+pos_dict = {1: "GK", 2: "DEF", 3: "MID", 4: "FWD"}
+
 # fixture difficulty ratings for 21/22 season
 rating2021 = {"Manchester City": 10, "Liverpool": 10, "Chelsea": 9, "West Ham": 9, "Manchester United": 8, "Arsenal": 8, "Tottenham": 7, "Wolves": 7, "Brighton": 6, "Southampton": 6, "Aston Villa": 5, "Leicester": 5, "Crystal Palace": 4,  "Brentford": 4, "Leeds": 3, "Everton": 3, "Newcastle": 2, "Norwich": 2, "Watford": 1, "Burnley": 1}
 
@@ -92,10 +95,11 @@ for player in players:
         playerObj = Player.Player()
         playerObj.name = player['first_name'] + " " + player['second_name']
         playerObj.value = player['now_cost']
+        playerObj.pos = pos_dict[player['element_type']]
         ID = player['id']
             
         # get their recent FPL performance stats
-        url = 'https://fantasy.premierleague.com/api/element-summary/' + str(player['id']) + '/' 
+        url = 'https://fantasy.premierleague.com/api/element-summary/' + str(ID) + '/' 
         response = get(url)
         history = response['history']
         recentGames = history[-4:]
@@ -148,12 +152,12 @@ for player in players:
 
 
 # with all the players data in the playerDB output it to a file so it can be used by the model
-header = ['name', 'avg_xG', 'avg_xA', 'avg_xGC', 'avg_I', 'avg_C', 'avg_T', 'avg_ICT', 'fixture_difficulty', 'is_home', 'form']
+header = ['name', 'pos', 'avg_xG', 'avg_xA', 'avg_xGC', 'avg_I', 'avg_C', 'avg_T', 'avg_ICT', 'fixture_difficulty', 'is_home', 'form']
 data = []
 for player in Player.playerDB:
-    data.append([player.name, player.avg_xG, player.avg_xA, player.avg_xGC, player.avg_I, player.avg_C, player.avg_T, player.avg_ICT, player.fixture, player.wasHome, player.form])
+    data.append([player.name, player.pos, player.avg_xG, player.avg_xA, player.avg_xGC, player.avg_I, player.avg_C, player.avg_T, player.avg_ICT, player.fixture, player.wasHome, player.form])
 
-with open('retrieved_data.csv', 'w', encoding="utf-8", newline='') as f:
+with open('retrieved_data2.csv', 'w', encoding="utf-8", newline='') as f:
     writer = csv.writer(f)
     writer.writerow(header)
 
