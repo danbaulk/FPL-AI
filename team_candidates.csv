@@ -1,0 +1,34 @@
+name,pos,return_confidence
+Granit Xhaka,GK,1
+Saman Ghoddos,GK,0.823
+Shandon Baptiste,GK,0.894
+Steven Alzate,GK,0.888
+Jack Cork,DEF,1
+Jairo Riedewald,DEF,0.923
+Jesurun Rak-Sakyi,DEF,0.894
+Marc Albrighton,DEF,0.963
+Jamie Shackleton,DEF,0.975
+Liam McCarron,DEF,0.982
+Stuart McKinstry,DEF,0.865
+Lewis Bate,DEF,0.965
+Tyler Morton,DEF,0.835
+Nemanja Matic,DEF,0.973
+Pierre Lees-Melou,DEF,0.989
+Mathias Normann,MID,0.897
+Jonathan Rowe,MID,1
+Pierre-Emile Højbjerg,MID,0.975
+Edo Kayembe,MID,0.982
+Sonny Perkins,MID,0.865
+Morgan Sanson,MID,0.965
+James McArthur,MID,0.835
+Mohamed Naser El Sayed Elneny,MID,1
+Hamza Choudhury,MID,0.823
+Nikola Vlasic,MID,0.894
+Jesse Lingard,MID,0.888
+Anwar El Ghazi,FWD,1
+Ken Sema,FWD,0.923
+James Milner,FWD,0.894
+Ibrahima Diallo,FWD,0.989
+Carney Chukwuemeka,FWD,0.897
+Eberechi Eze,FWD,1
+Tyler Onyango,FWD,0.975

@@ -34,6 +34,7 @@ class Player:
             self.name = rawData[2] # name of player
             self.pos = rawData[3] # position of player
             self.value = rawData[34] # value of player
+            self.club = "My Team" # the club of the player
 
             # recent stats lists for the player (max 4)
             self.influence = [float(rawData[15])] # influence score for player
@@ -61,6 +62,7 @@ class Player:
             self.name = ""
             self.pos = ""
             self.value = ""
+            self.club = ""
             self.influence = []
             self.creativity = []
             self.threat = []
