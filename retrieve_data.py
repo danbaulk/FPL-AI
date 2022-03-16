@@ -1,5 +1,5 @@
 """this module retrieves the data for the upcoming gameweek of all the players"""
-import pandas as pd
+from fileinput import filename
 import Player
 import requests
 import csv
@@ -149,17 +149,45 @@ for player in players:
 
         Player.playerDB.append(playerObj) # add the player to the DB
 
+# with all the players data in the playerDB output it to their respective files depending on their positions
+filename = input("Input the gameweek: ")
 
+header = ['name', 'pos', 'avg_xG', 'avg_xA', 'avg_xGC', 'avg_I', 'avg_C', 'avg_T', 'avg_ICT', 'fixture_difficulty', 'is_home', 'form', 'class']
+GK_data = []
+DEF_data = []
+MID_data = []
+FWD_data = []
 
-# with all the players data in the playerDB output it to a file so it can be used by the model
-header = ['name', 'pos', 'avg_xG', 'avg_xA', 'avg_xGC', 'avg_I', 'avg_C', 'avg_T', 'avg_ICT', 'fixture_difficulty', 'is_home', 'form']
-data = []
 for player in Player.playerDB:
-    data.append([player.name, player.pos, player.avg_xG, player.avg_xA, player.avg_xGC, player.avg_I, player.avg_C, player.avg_T, player.avg_ICT, player.fixture, player.wasHome, player.form])
+    if player.pos == 'GK':
+        GK_data.append([player.name, player.pos, player.avg_xG, player.avg_xA, player.avg_xGC, player.avg_I, player.avg_C, player.avg_T, player.avg_ICT, player.fixture, player.wasHome, player.form, '?'])
+    elif player.pos == 'DEF':
+        DEF_data.append([player.name, player.pos, player.avg_xG, player.avg_xA, player.avg_xGC, player.avg_I, player.avg_C, player.avg_T, player.avg_ICT, player.fixture, player.wasHome, player.form, '?'])
+    elif player.pos == 'MID':
+        MID_data.append([player.name, player.pos, player.avg_xG, player.avg_xA, player.avg_xGC, player.avg_I, player.avg_C, player.avg_T, player.avg_ICT, player.fixture, player.wasHome, player.form, '?'])
+    else:
+        FWD_data.append([player.name, player.pos, player.avg_xG, player.avg_xA, player.avg_xGC, player.avg_I, player.avg_C, player.avg_T, player.avg_ICT, player.fixture, player.wasHome, player.form, '?'])
 
-with open('retrieved_data2.csv', 'w', encoding="utf-8", newline='') as f:
+with open('GK_gameweek_' + filename + '.csv', 'w', encoding="utf-8", newline='') as f:
     writer = csv.writer(f)
     writer.writerow(header)
+    for row in GK_data:
+        writer.writerow(row)
 
-    for row in data:
+with open('DEF_gameweek_' + filename + '.csv', 'w', encoding="utf-8", newline='') as f:
+    writer = csv.writer(f)
+    writer.writerow(header)
+    for row in DEF_data:
+        writer.writerow(row)
+
+with open('MID_gameweek_' + filename + '.csv', 'w', encoding="utf-8", newline='') as f:
+    writer = csv.writer(f)
+    writer.writerow(header)
+    for row in MID_data:
+        writer.writerow(row)
+
+with open('FWD_gameweek_' + filename + '.csv', 'w', encoding="utf-8", newline='') as f:
+    writer = csv.writer(f)
+    writer.writerow(header)
+    for row in FWD_data:
         writer.writerow(row)

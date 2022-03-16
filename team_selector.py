@@ -10,7 +10,6 @@ team creation rules."""
 # Players not in the starting 11 are on the bench and are ordered in terms of substitution priority
 
 import csv
-from numpy import append
 import requests
 import json
 import Player
