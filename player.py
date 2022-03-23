@@ -13,9 +13,10 @@ def addRecentStats(statsList, stat):
 def calcAvg(statsList):
     """calculate the average of the recent stats list"""
     avg = 0
-    for stat in statsList:
-        avg += stat
-    avg = avg / len(statsList) # calculate as an average of the max 4 most recent performances
+    if len(statsList) > 0:
+        for stat in statsList:
+            avg += stat
+        avg = avg / len(statsList) # calculate as an average of the max 4 most recent performances
     return avg
 
 class Player:
