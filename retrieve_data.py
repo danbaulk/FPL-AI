@@ -144,13 +144,13 @@ for player in players:
             playerObj.avg_xG = Player.calcAvg(retrievedData[0])
             playerObj.avg_xA = Player.calcAvg(retrievedData[1])
             playerObj.avg_xGC = Player.calcAvg(retrievedData[2])
-        except:
-            missingIDs.append([playerObj.name, ID])
-            playerObj.avg_xG = 'FAIL'
-            playerObj.avg_xA = 'FAIL'
-            playerObj.avg_xGC = 'FAIL'
 
-        Player.playerDB.append(playerObj) # add the player to the DB
+            Player.playerDB.append(playerObj) # add the player to the DB
+
+        except:
+            # if the players understat data cannot be retrieved (understat ID not in dict) add them to the log
+            missingIDs.append([playerObj.name, ID])
+
 
 # with all the players data in the playerDB output it to their respective files depending on their positions
 filename = input("Input the gameweek: ")
