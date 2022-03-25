@@ -69,7 +69,8 @@ def get(url):
     return json.loads(response.content)
 
 # the input file contains all the players the model predicted would score highly this gameweek along with their confidence
-with open('team_candidates.csv', newline='') as data:
+filename = input("Enter the team_candidates file: ")
+with open(filename, newline='') as data:
     reader = csv.reader(data)
     candidates = list(reader)
     candidates = candidates[1:] # exclude first row - this is the headings for the data
