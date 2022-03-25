@@ -1,6 +1,6 @@
 """
-run this script to the csv file with supplementary data
-this script will only need to be run once, in order to update the csv file
+run this script to update the training data csv file with supplementary data
+this script will only need to be run once, in order to update the training data csv file
 """
 import csv
 import Player
