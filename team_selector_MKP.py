@@ -9,44 +9,55 @@ It will modelthe team selection problem as a multi-dinmensional knapsack packing
 # Budget canot exceed 100m
 # No more than 3 players from the same club
 # A squad consists of 2 GKs, 5 DEFs, 5 MIDs, 3 FWDs
-# Starting 11 must have 1 GK, at least 2 DEFs, at least 2 MIDs and at least 1 FWD. No more than 11 players
+# Starting 11 must have 1 GK, at least 3 DEFs, at least 3 MIDs and at least 1 FWD. No more than 11 players
 # Players not in the starting 11 are on the bench and are ordered in terms of substitution priority
 
 import csv
 import requests
 import json
 import Player
-import ortools
 from ortools.linear_solver import pywraplp
 
 team_dict = {1: "Arsenal", 2: "Aston Villa", 3: "Brentford", 4: "Brighton", 5: "Burnley", 6: "Chelsea", 7: "Crystal Palace", 8: "Everton", 9: "Leicester", 10: "Leeds", 11: "Liverpool", 12: "Manchester City", 13: "Manchester United", 14: "Newcastle", 15: "Norwich", 16: "Southampton", 17: "Tottenham", 18: "Watford", 19: "West Ham", 20: "Wolves"}
 
-# create the team which with the highest confidence of scoring points which is within the FPL rules
-budget = 1000
-squad = [] # 15 man squad
-GK = [] # 2 GK
-DEF = [] # 5 DEF
-MID = [] # 5 MID
-FWD = [] # 3 FWD
-startingXI = [] # the selected starting 11
-bench = [] # 4 on the bench
-# maintain a count of the number of players in each club
-count = {"Arsenal": 0, "Aston Villa": 0, "Brentford": 0, "Brighton": 0, "Burnley": 0, "Chelsea": 0, "Crystal Palace": 0, "Everton": 0, "Leicester": 0, "Leeds": 0, "Liverpool": 0, "Manchester City": 0, "Manchester United": 0, "Newcastle": 0, "Norwich": 0, "Southampton": 0, "Tottenham": 0, "Watford": 0, "West Ham": 0, "Wolves": 0}
-
-def checkValid(player):
-    """pass the function a player to see if they fit in the squad without breaking FPL rules"""
+def checkMinReqs(player):
+    """pass the function a player to see if they fit in the starting XI without breaking the minimum requirements for a starting XI"""
     valid = True
-    pos = player[0].pos
-    price = player[0].value
-    club = player[0].club
+    pos = player.pos
+
+    # check the positions havent already been filled
+    if pos == "GK":
+        if len(GK) == 1:
+            valid = False
+    elif pos == "DEF":
+        if len(DEF) == 3:
+            valid = False
+    elif pos == "MID":
+        if len(MID) == 3:
+            valid = False
+    else:
+        if len(FWD) == 1:
+            valid = False
+    
+    # check they arent already added to the team
+    for starter in startingXI:
+        if starter.name == player.name:
+            valid = False
+
+    return valid
+
+def checkFormation(player):
+    """pass the function a player to see if they fit in the starting XI without breaking FPL rules"""
+    valid = True
+    pos = player.pos
 
     # check starting 11 isnt full
-    if len(squad) == 15:
+    if len(startingXI) == 11:
         valid = False
 
     # check the positions havent already been filled
     if pos == "GK":
-        if len(GK) == 2:
+        if len(GK) == 1:
             valid = False
     elif pos == "DEF":
         if len(DEF) == 5:
@@ -58,15 +69,21 @@ def checkValid(player):
         if len(FWD) == 3:
             valid = False
     
-    # check that the player is within budget
-    if price > budget:
-        valid = False
-    
-    # check there arent already 3 players from that club
-    if count[club] == 3:
-        valid = False
+    # check they arent already added to the team
+    for starter in startingXI:
+        if starter.name == player.name:
+            valid = False
 
     return valid
+
+def checkMatch(string1, string2):
+    """check that the two given strings match, if so return 1, 0 otherwise"""
+    match = 0
+    if string1 == string2:
+        match = 1
+    else:
+        match = 0
+    return match
 
 def get(url):
     """gets the JSON data from the given URL"""
@@ -80,9 +97,10 @@ with open(filename, newline='') as data:
     candidates = list(reader)
     candidates = candidates[1:] # exclude first row - this is the headings for the data
 
-# a list of player objects and their asociated confidence of scoring highly
-processedCandidates = []
+# a list of player objects in the order theyre given to the MKP solver
+players = []
 
+# get the latest data from the FPL API, for example their current price
 url = 'https://fantasy.premierleague.com/api/bootstrap-static/'
 response = get(url)
 FPL_players = response['elements']
@@ -113,13 +131,10 @@ for player in FPL_players:
                 club.append(currentPlayer.club)
                 position.append(currentPlayer.pos)
 
-                processedCandidates.append([currentPlayer, confidence]) # add the player object and their confidence score to the list
+                players.append(currentPlayer) # add the player object and to the list of players to retrieve their data later
 
 
-# sort the processed candidates list by their confidence
-sortedCandidates = sorted(processedCandidates, key=lambda x: x[1], reverse = True)
-
-# get an optimisation solution to the MKP to form a squad
+# get an optimisation solution to the MKP to form a squad using Googles ortools library
 solver = solver = pywraplp.Solver.CreateSolver('SCIP')
 
 # add the player data to the data dictionary
@@ -160,57 +175,57 @@ for b in data['squad']:
 for b in data['squad']:
     solver.Add(sum(x[i, b] for i in data['players']) == data['squad_capacity'][b])
 
-# #  there must be 2 GKs, 5 DEFs, 5 MIDs, 3 FWDs
-# for b in data['squad']:
-#      solver.Add(sum(x[i, b] * list(data['position'][i]).count('GK') for i in data['players']) == data['GK_capacity'][b])
-# for b in data['squad']:
-#      solver.Add(sum(x[i, b] * list(data['position'][i]).count('DEF') for i in data['players']) == data['DEF_capacity'][b])
-# for b in data['squad']:
-#      solver.Add(sum(x[i, b] * list(data['position'][i]).count('MID') for i in data['players']) == data['MID_capacity'][b])
-# for b in data['squad']:
-#      solver.Add(sum(x[i, b] * list(data['position'][i]).count('FWD') for i in data['players']) == data['FWD_capacity'][b])
+#  there must be 2 GKs, 5 DEFs, 5 MIDs, 3 FWDs
+for b in data['squad']:
+     solver.Add(sum(x[i, b] * checkMatch('GK', data['position'][i]) for i in data['players']) == data['GK_capacity'][b])
+for b in data['squad']:
+     solver.Add(sum(x[i, b] * checkMatch('DEF', data['position'][i]) for i in data['players']) == data['DEF_capacity'][b])
+for b in data['squad']:
+     solver.Add(sum(x[i, b] * checkMatch('MID', data['position'][i]) for i in data['players']) == data['MID_capacity'][b])
+for b in data['squad']:
+     solver.Add(sum(x[i, b] * checkMatch('FWD', data['position'][i]) for i in data['players']) == data['FWD_capacity'][b])
 
-# # no more than 3 players from any one club
-# for b in data['squad']:
-#     solver.Add(sum(x[i, b] * list(data['club'][i]).count('Arsenal') for i in data['players']) == data['club_capacity'][b])
-# for b in data['squad']:
-#     solver.Add(sum(x[i, b] * list(data['club'][i]).count('Aston Villa') for i in data['players']) == data['club_capacity'][b])
-# for b in data['squad']:
-#     solver.Add(sum(x[i, b] * list(data['club'][i]).count('Brentford') for i in data['players']) == data['club_capacity'][b])
-# for b in data['squad']:
-#     solver.Add(sum(x[i, b] * list(data['club'][i]).count('Brighton') for i in data['players']) == data['club_capacity'][b])
-# for b in data['squad']:
-#     solver.Add(sum(x[i, b] * list(data['club'][i]).count('Burnley') for i in data['players']) == data['club_capacity'][b])
-# for b in data['squad']:
-#     solver.Add(sum(x[i, b] * list(data['club'][i]).count('Chelsea') for i in data['players']) == data['club_capacity'][b])
-# for b in data['squad']:
-#     solver.Add(sum(x[i, b] * list(data['club'][i]).count('Crystal Palace') for i in data['players']) == data['club_capacity'][b])
-# for b in data['squad']:
-#     solver.Add(sum(x[i, b] * list(data['club'][i]).count('Everton') for i in data['players']) == data['club_capacity'][b])
-# for b in data['squad']:
-#     solver.Add(sum(x[i, b] * list(data['club'][i]).count('Leicester') for i in data['players']) == data['club_capacity'][b])
-# for b in data['squad']:
-#     solver.Add(sum(x[i, b] * list(data['club'][i]).count('Leeds') for i in data['players']) == data['club_capacity'][b])
-# for b in data['squad']:
-#     solver.Add(sum(x[i, b] * list(data['club'][i]).count('Liverpool') for i in data['players']) == data['club_capacity'][b])
-# for b in data['squad']:
-#     solver.Add(sum(x[i, b] * list(data['club'][i]).count('Manchester City') for i in data['players']) == data['club_capacity'][b])
-# for b in data['squad']:
-#     solver.Add(sum(x[i, b] * list(data['club'][i]).count('Manchester United') for i in data['players']) == data['club_capacity'][b])
-# for b in data['squad']:
-#     solver.Add(sum(x[i, b] * list(data['club'][i]).count('Newcastle') for i in data['players']) == data['club_capacity'][b])
-# for b in data['squad']:
-#     solver.Add(sum(x[i, b] * list(data['club'][i]).count('Norwich') for i in data['players']) == data['club_capacity'][b])
-# for b in data['squad']:
-#     solver.Add(sum(x[i, b] * list(data['club'][i]).count('Southampton') for i in data['players']) == data['club_capacity'][b])
-# for b in data['squad']:
-#     solver.Add(sum(x[i, b] * list(data['club'][i]).count('Tottenham') for i in data['players']) == data['club_capacity'][b])
-# for b in data['squad']:
-#     solver.Add(sum(x[i, b] * list(data['club'][i]).count('Watford') for i in data['players']) == data['club_capacity'][b])
-# for b in data['squad']:
-#     solver.Add(sum(x[i, b] * list(data['club'][i]).count('West Ham') for i in data['players']) == data['club_capacity'][b])
-# for b in data['squad']:
-#     solver.Add(sum(x[i, b] * list(data['club'][i]).count('Wolves') for i in data['players']) == data['club_capacity'][b])
+# no more than 3 players from any one club
+for b in data['squad']:
+    solver.Add(sum(x[i, b] * checkMatch('Arsenal', data['position'][i]) for i in data['players']) <= data['club_capacity'][b])
+for b in data['squad']:
+    solver.Add(sum(x[i, b] * checkMatch('Aston Villa', data['position'][i]) for i in data['players']) <= data['club_capacity'][b])
+for b in data['squad']:
+    solver.Add(sum(x[i, b] * checkMatch('Brentford', data['position'][i]) for i in data['players']) <= data['club_capacity'][b])
+for b in data['squad']:
+    solver.Add(sum(x[i, b] * checkMatch('Brighton', data['position'][i]) for i in data['players']) <= data['club_capacity'][b])
+for b in data['squad']:
+    solver.Add(sum(x[i, b] * checkMatch('Burnley', data['position'][i]) for i in data['players']) <= data['club_capacity'][b])
+for b in data['squad']:
+    solver.Add(sum(x[i, b] * checkMatch('Chelsea', data['position'][i]) for i in data['players']) <= data['club_capacity'][b])
+for b in data['squad']:
+    solver.Add(sum(x[i, b] * checkMatch('Crystal Palace', data['position'][i]) for i in data['players']) <= data['club_capacity'][b])
+for b in data['squad']:
+    solver.Add(sum(x[i, b] * checkMatch('Everton', data['position'][i]) for i in data['players']) <= data['club_capacity'][b])
+for b in data['squad']:
+    solver.Add(sum(x[i, b] * checkMatch('Leicester', data['position'][i]) for i in data['players']) <= data['club_capacity'][b])
+for b in data['squad']:
+    solver.Add(sum(x[i, b] * checkMatch('Leeds', data['position'][i]) for i in data['players']) <= data['club_capacity'][b])
+for b in data['squad']:
+    solver.Add(sum(x[i, b] * checkMatch('Liverpool', data['position'][i]) for i in data['players']) <= data['club_capacity'][b])
+for b in data['squad']:
+    solver.Add(sum(x[i, b] * checkMatch('Manchester City', data['position'][i]) for i in data['players']) <= data['club_capacity'][b])
+for b in data['squad']:
+    solver.Add(sum(x[i, b] * checkMatch('Manchester United', data['position'][i]) for i in data['players']) <= data['club_capacity'][b])
+for b in data['squad']:
+    solver.Add(sum(x[i, b] * checkMatch('Newcastle', data['position'][i]) for i in data['players']) <= data['club_capacity'][b])
+for b in data['squad']:
+    solver.Add(sum(x[i, b] * checkMatch('Norwich', data['position'][i]) for i in data['players']) <= data['club_capacity'][b])
+for b in data['squad']:
+    solver.Add(sum(x[i, b] * checkMatch('Southampton', data['position'][i]) for i in data['players']) <= data['club_capacity'][b])
+for b in data['squad']:
+    solver.Add(sum(x[i, b] * checkMatch('Tottenham', data['position'][i]) for i in data['players']) <= data['club_capacity'][b])
+for b in data['squad']:
+    solver.Add(sum(x[i, b] * checkMatch('Watford', data['position'][i]) for i in data['players']) <= data['club_capacity'][b])
+for b in data['squad']:
+    solver.Add(sum(x[i, b] * checkMatch('West Ham', data['position'][i]) for i in data['players']) <= data['club_capacity'][b])
+for b in data['squad']:
+    solver.Add(sum(x[i, b] * checkMatch('Wolves', data['position'][i]) for i in data['players']) <= data['club_capacity'][b])
 
 
 # Maximize total return confidence of the squad
@@ -221,15 +236,64 @@ for i in data['players']:
 objective.SetMaximization()
 
 status = solver.Solve()
+playerIndex = [] 
+squad = [] # 15 man squad
 
 if status == pywraplp.Solver.OPTIMAL:
-    print(f'Total squad confidence: {objective.Value()}')
     for b in data['squad']:
-        print(f'Squad {b}')
         for i in data['players']:
             if x[i, b].solution_value() == 1:
-                print(f"Player {i} Cost: {data['cost'][i]} Confidence: {data['score'][i]}")
+                # add the player index along with their confidence
+                playerIndex.append([i, data['score'][i]])
 else:
     print('The problem does not have an optimal solution.')
+    # if we reach here it means that it is not possible to field a squad of 15 within the rules
 
-# with the squad greedily pick the starting 11 in acordance with the FPL rules
+# using the player indexes picked by the MKP solver, match them to their player objects and add them to the squad
+for index in playerIndex:
+    squad.append([players[index[0]], index[1]]) # add the player object and their confidence to the squad
+
+# with the squad, greedily pick the starting 11 in acordance with the FPL rules
+startingXI = [] # the selected starting 11
+GK = [] # 2 GK
+DEF = [] # 5 DEF
+MID = [] # 5 MID
+FWD = [] # 3 FWD
+
+# sort the squad in order of confidence
+sortedPlayers = sorted(squad, key=lambda x: x[1], reverse = True)
+print("\n Squad:")
+for player in sortedPlayers:
+    print(player[0].name, player[1])
+
+# fill the starting 11's minimum requirements first: 1 GK, 2 DEF, 2 MID, 1 FWD
+for player in sortedPlayers:
+    # check they can be added to the min reqs starting XI
+    if checkMinReqs(player[0]):
+        startingXI.append(player[0]) # add the player object to the starting XI
+        if player[0].pos == "GK":
+            GK.append(player[0])
+        elif player[0].pos == "DEF":
+            DEF.append(player[0])
+        elif player[0].pos == "MID":
+            MID.append(player[0])
+        else:
+            FWD.append(player[0])
+
+# next greedily fill the rest of the starting XI, without breaking the formation rules
+for player in sortedPlayers:
+    # check they can be added to the min reqs starting XI
+    if checkFormation(player[0]):
+        startingXI.append(player[0]) # add the player object to the starting XI
+        if player[0].pos == "GK":
+            GK.append(player[0])
+        elif player[0].pos == "DEF":
+            DEF.append(player[0])
+        elif player[0].pos == "MID":
+            MID.append(player[0])
+        else:
+            FWD.append(player[0])
+
+print("\n Starting XI:")
+for player in startingXI:
+    print(player.name, player.pos)
