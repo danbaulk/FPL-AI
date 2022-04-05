@@ -165,7 +165,7 @@ for player in players:
 
 
 # with all the players data in the playerDB output it to their respective files depending on their positions
-header = ['name', 'pos', 'avg_xG', 'avg_xA', 'avg_xGC', 'avg_I', 'avg_C', 'avg_T', 'avg_ICT', 'fixture_difficulty', 'is_home', 'form', 'class']
+header = ['name', 'pos', 'avg_xG', 'avg_xA', 'avg_xGC', 'avg_I', 'avg_C', 'avg_T', 'avg_ICT', 'fixture_difficulty', 'was_home', 'form', 'class']
 GK_data = []
 DEF_data = []
 MID_data = []
