@@ -1,53 +1,53 @@
 name,pos,prediction,confidence_score
-Bernd Leno,GK,2:return,0.506
-Emiliano Mart√≠nez,GK,1:no,0.621
-Robin Olsen,GK,1:no,0.621
-David Raya Martin,GK,1:no,0.621
-Alvaro Fernandez,GK,1:no,0.621
-Jonas Lassl,GK,1:no,0.621
-Jason Steele,GK,2:return,0.506
-Robert Sanchez,GK,2:return,0.506
-Nick Pope,GK,1:no,0.621
-Nick Pope,GK,2:return,0.506
-Will Norris,GK,1:no,0.621
-Will Norris,GK,2:return,0.506
-Wayne Hennessey,GK,1:no,0.621
-Wayne Hennessey,GK,2:return,0.506
-Kepa Arrizabalaga,GK,2:return,0.506
-Edouard Mendy,GK,2:return,0.506
-Vicente Guaita,GK,1:no,0.621
-Jack Butland,GK,1:no,0.621
-Jordan Pickford,GK,1:no,0.621
-Jordan Pickford,GK,2:return,0.506
-Asmir Begovic,GK,1:no,0.621
-Asmir Begovic,GK,2:return,0.506
-Kasper Schmeichel,GK,1:no,0.621
-Eldin Jakupovic,GK,1:no,0.621
-Adria°n San Miguel del Castillo,GK,2:return,0.506
-Alisson Ramses Becker,GK,2:return,0.506
-Caoimhin Kelleher,GK,2:return,0.506
-Ederson Santana de Moraes,GK,2:return,0.506
-Zack Steffen,GK,2:return,0.506
-Scott Carson,GK,2:return,0.506
-David de Gea,GK,1:no,0.621
-Dean Henderson,GK,1:no,0.621
-Tom Heaton,GK,1:no,0.621
-Karl Darlow,GK,1:no,0.621
-Martin Dubravka,GK,1:no,0.621
-Michael McGovern,GK,1:no,0.621
-Tim Krul,GK,1:no,0.621
-Angus Gunn,GK,1:no,0.621
-Fraser Forster,GK,2:return,0.506
-Willy Caballero,GK,2:return,0.506
-Hugo Lloris,GK,2:return,0.506
-Pierluigi Gollini,GK,2:return,0.506
-Ben Foster,GK,1:no,0.621
-Daniel Bachmann,GK,1:no,0.621
-Darren Randolph,GK,2:return,0.506
-Lukasz Fabianski,GK,2:return,0.506
-Alphonse Areola,GK,2:return,0.506
-John Ruddy,GK,1:no,0.621
-Jose Malheiro de Sa,GK,1:no,0.621
+Bernd Leno,GK,2:return,0.568
+Emiliano Mart√≠nez,GK,1:no,0.508
+Robin Olsen,GK,2:return,0.568
+David Raya Martin,GK,2:return,0.512
+Alvaro Fernandez,GK,2:return,0.542
+Jonas Lassl,GK,2:return,0.542
+Jason Steele,GK,2:return,0.669
+Robert Sanchez,GK,2:return,0.66
+Nick Pope,GK,1:no,0.501
+Nick Pope,GK,2:return,0.618
+Will Norris,GK,2:return,0.534
+Will Norris,GK,2:return,0.65
+Wayne Hennessey,GK,2:return,0.986
+Wayne Hennessey,GK,2:return,0.991
+Kepa Arrizabalaga,GK,2:return,0.605
+Edouard Mendy,GK,2:return,0.528
+Vicente Guaita,GK,1:no,0.517
+Jack Butland,GK,2:return,0.522
+Jordan Pickford,GK,2:return,0.514
+Jordan Pickford,GK,2:return,0.658
+Asmir Begovic,GK,1:no,0.522
+Asmir Begovic,GK,2:return,0.625
+Kasper Schmeichel,GK,1:no,0.539
+Eldin Jakupovic,GK,2:return,0.563
+Adria°n San Miguel del Castillo,GK,2:return,0.663
+Alisson Ramses Becker,GK,2:return,0.658
+Caoimhin Kelleher,GK,2:return,0.663
+Ederson Santana de Moraes,GK,2:return,0.61
+Zack Steffen,GK,2:return,0.673
+Scott Carson,GK,2:return,0.673
+David de Gea,GK,2:return,0.566
+Dean Henderson,GK,2:return,0.613
+Tom Heaton,GK,2:return,0.613
+Karl Darlow,GK,2:return,0.574
+Martin Dubravka,GK,2:return,0.527
+Michael McGovern,GK,2:return,0.581
+Tim Krul,GK,2:return,1
+Angus Gunn,GK,2:return,0.562
+Fraser Forster,GK,2:return,0.597
+Willy Caballero,GK,2:return,0.646
+Hugo Lloris,GK,2:return,0.571
+Pierluigi Gollini,GK,2:return,0.647
+Ben Foster,GK,1:no,0.53
+Daniel Bachmann,GK,2:return,0.532
+Darren Randolph,GK,2:return,0.65
+Lukasz Fabianski,GK,2:return,0.599
+Alphonse Areola,GK,2:return,0.65
+John Ruddy,GK,2:return,0.613
+Jose Malheiro de Sa,GK,2:return,0.553
 Ben White,DEF,2:return,0.645
 Calum Chambers,DEF,2:return,0.562
 Matthew Cash,DEF,2:return,0.556
