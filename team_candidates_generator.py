@@ -25,20 +25,21 @@ for player in candidates:
 names = []
 doublers = []
 for player in returners:
-    for name in names:
-        if player[0] == name:
+    if player[0] in names:
             doublers.append(player[0])
-        else:
-            names.append(player[0])
+    else:
+        names.append(player[0])
 
 # with the list of doublers names sum their return confidences and remove the duplicates
 for doubler in doublers:
     newConfidence = 0
+    pos = ""
     for player in returners:
-        if player[0] == doubler[0]:
-            newConfidence += player[2]
-    returners = [x for x in returners if not x[0] == doubler[0]] # create the new returners list with the doubler removed
-    returners.append([doubler[0], doubler[1], newConfidence]) # add the new entry to the returners list
+        if player[0] == doubler:
+            newConfidence += float(player[2])
+            pos = player[1]
+    returners = [x for x in returners if not x[0] == doubler] # create the new returners list with the doubler removed
+    returners.append([doubler, pos, newConfidence]) # add the new entry to the returners list
 
 # write the returners to the team candidates file
 upcomingGW = input("What is the upcoming gameweek: ")

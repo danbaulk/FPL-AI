@@ -2,7 +2,7 @@
 model to be players who will likely score highly this upcoming gameweek and then output a team which is valid within the FPL 
 team creation rules.
 
-It will modelthe team selection problem as a multi-dinmensional knapsack packing problem (MKP) and aim to opimise it"""
+It will model the team selection problem as a multi-dinmensional knapsack packing problem (MKP) and aim to opimise it"""
 
 # FPL team rules:
 # A squad must be 15 players
