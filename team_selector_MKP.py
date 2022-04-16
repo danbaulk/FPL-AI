@@ -135,7 +135,7 @@ for player in FPL_players:
 
 
 # get an optimisation solution to the MKP to form a squad using Googles ortools library
-solver = solver = pywraplp.Solver.CreateSolver('SCIP')
+solver = pywraplp.Solver.CreateSolver('SCIP')
 
 # add the player data to the data dictionary
 data['score'] = score # the return confidence
