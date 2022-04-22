@@ -17,7 +17,7 @@ missingIDs = []
 pos_dict = {1: "GK", 2: "DEF", 3: "MID", 4: "FWD"}
 
 # fixture difficulty ratings for 21/22 season
-rating2021 = {"Manchester City": 10, "Liverpool": 10, "Chelsea": 9, "West Ham": 9, "Manchester United": 8, "Arsenal": 8, "Tottenham": 7, "Wolverhampton Wanderers": 7, "Brighton": 6, "Southampton": 6, "Aston Villa": 5, "Leicester": 5, "Crystal Palace": 4,  "Brentford": 4, "Leeds": 3, "Everton": 3, "Newcastle United": 2, "Norwich": 2, "Watford": 1, "Burnley": 1}
+rating2021 = {"Manchester City": 10, "Liverpool": 10, "Chelsea": 9, "Tottenham": 9, "Arsenal": 8, "Manchester United": 8, "West Ham": 7,  "Wolverhampton Wanderers": 7, "Leicester": 6, "Brighton": 6, "Newcastle United": 5, "Brentford": 5, "Southampton": 4, "Crystal Palace": 4, "Aston Villa": 3, "Leeds": 3, "Everton": 2, "Burnley": 2, "Watford": 1, "Norwich": 1}
 
 # team id and team name dictionary
 team_dict = {1: "Arsenal", 2: "Aston Villa", 3: "Brentford", 4: "Brighton", 5: "Burnley", 6: "Chelsea", 7: "Crystal Palace", 8: "Everton", 9: "Leicester", 10: "Leeds", 11: "Liverpool", 12: "Manchester City", 13: "Manchester United", 14: "Newcastle United", 15: "Norwich", 16: "Southampton", 17: "Tottenham", 18: "Watford", 19: "West Ham", 20: "Wolverhampton Wanderers"}
