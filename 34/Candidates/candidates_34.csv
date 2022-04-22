@@ -1,0 +1,454 @@
+name,pos,prediction,confidence_score
+Bernd Leno,GK,2:return,0.558
+Aaron Ramsdale,GK,2:return,0.523
+Emiliano Martínez,GK,2:return,0.543
+Robin Olsen,GK,2:return,0.58
+David Raya Martin,GK,1:no,0.569
+Alvaro Fernandes,GK,2:return,0.548
+Jonas Lössl,GK,2:return,0.548
+Jason Steele,GK,2:return,0.636
+Robert Sánchez,GK,2:return,0.561
+Nick Pope,GK,2:return,0.549
+Will Norris,GK,2:return,0.59
+Wayne Hennessey,GK,2:return,0.989
+Kepa Arrizabalaga,GK,2:return,0.585
+Kepa Arrizabalaga,GK,2:return,0.546
+Edouard Mendy,GK,2:return,0.513
+Edouard Mendy,GK,1:no,0.526
+Vicente Guaita,GK,2:return,0.596
+Jack Butland,GK,2:return,0.653
+Jordan Pickford,GK,1:no,0.61
+Asmir Begović,GK,2:return,0.517
+Kasper Schmeichel,GK,2:return,0.627
+Eldin Jakupovic,GK,2:return,0.66
+Illan Meslier,GK,2:return,0.561
+Adrián San Miguel del Castillo,GK,2:return,0.655
+Alisson Ramses Becker,GK,2:return,0.594
+Caoimhin Kelleher,GK,2:return,0.655
+Ederson Santana de Moraes,GK,2:return,0.596
+Zack Steffen,GK,2:return,0.665
+Scott Carson,GK,2:return,0.665
+David de Gea,GK,2:return,0.512
+David de Gea,GK,2:return,0.52
+Dean Henderson,GK,2:return,0.548
+Dean Henderson,GK,2:return,0.556
+Tom Heaton,GK,2:return,0.548
+Tom Heaton,GK,2:return,0.556
+Karl Darlow,GK,2:return,0.672
+Martin Dubravka,GK,2:return,0.6
+Michael McGovern,GK,2:return,0.622
+Tim Krul,GK,2:return,1
+Angus Gunn,GK,2:return,0.622
+Fraser Forster,GK,2:return,0.565
+Alex McCarthy,GK,2:return,0.581
+Willy Caballero,GK,2:return,0.578
+Hugo Lloris,GK,2:return,0.516
+Pierluigi Gollini,GK,2:return,0.583
+Ben Foster,GK,1:no,0.517
+Daniel Bachmann,GK,2:return,0.521
+Darren Randolph,GK,2:return,0.536
+Lukasz Fabianski,GK,2:return,0.501
+Alphonse Areola,GK,2:return,0.536
+John Ruddy,GK,2:return,0.658
+José Malheiro de Sá,GK,2:return,0.599
+Cédric Soares,DEF,1:no,0.595
+Rob Holding,DEF,1:no,0.923
+Gabriel Magalhães,DEF,1:no,0.629
+Ben White,DEF,1:no,0.864
+Nuno Varela Tavares,DEF,1:no,0.757
+Calum Chambers,DEF,1:no,0.987
+Tyrone Mings,DEF,1:no,0.857
+Matthew Cash,DEF,1:no,0.753
+Ezri Konsa Ngoyo,DEF,1:no,0.808
+Ashley Young,DEF,1:no,0.862
+Pontus Jansson,DEF,2:return,0.591
+Rico Henry,DEF,1:no,0.68
+Mads Roerslev Rasmussen,DEF,1:no,0.988
+Mads Bech Sørensen,DEF,1:no,0.856
+Kristoffer Ajer,DEF,2:return,0.554
+Finley Stevens,DEF,1:no,0.999
+Lewis Dunk,DEF,2:return,0.655
+Adam Webster,DEF,1:no,0.998
+Joël Veltman,DEF,2:return,0.645
+Tariq Lamptey,DEF,1:no,0.59
+Marc Cucurella,DEF,2:return,0.666
+James Tarkowski,DEF,1:no,0.639
+Phil Bardsley,DEF,1:no,0.999
+Kevin Long,DEF,1:no,0.999
+Matthew Lowton,DEF,1:no,0.822
+Charlie Taylor,DEF,1:no,0.644
+Nathan Collins,DEF,2:return,0.657
+Connor Roberts,DEF,1:no,0.706
+César Azpilicueta,DEF,1:no,0.701
+César Azpilicueta,DEF,1:no,0.813
+Thiago Emiliano da Silva,DEF,1:no,0.87
+Thiago Emiliano da Silva,DEF,1:no,0.925
+Marcos Alonso,DEF,2:return,0.75
+Marcos Alonso,DEF,2:return,0.618
+Reece James,DEF,1:no,0.862
+Reece James,DEF,1:no,0.92
+Malang Sarr,DEF,1:no,0.9
+Malang Sarr,DEF,1:no,0.944
+Trevoh Chalobah,DEF,1:no,0.897
+Trevoh Chalobah,DEF,1:no,0.941
+James Tomkins,DEF,1:no,0.998
+Cheikhou Kouyaté,DEF,1:no,0.685
+Martin Kelly,DEF,1:no,0.999
+Tyrick Mitchell,DEF,1:no,0.675
+Joel Ward,DEF,1:no,0.855
+Marc Guéhi,DEF,2:return,0.645
+Joachim Andersen,DEF,2:return,0.64
+Nathaniel Clyne,DEF,1:no,0.796
+Seamus Coleman,DEF,1:no,0.955
+Michael Keane,DEF,1:no,0.967
+Yerry Mina,DEF,1:no,0.967
+Mason Holgate,DEF,1:no,0.918
+Ben Godfrey,DEF,1:no,0.923
+Jonjoe Kenny,DEF,1:no,0.919
+Jarrad Branthwaite,DEF,1:no,1
+Vitalii Mykolenko,DEF,1:no,0.887
+Jonny Evans,DEF,1:no,0.898
+Ricardo Domingos Barbosa Pereira,DEF,1:no,0.999
+Daniel Amartey,DEF,1:no,0.898
+Timothy Castagne,DEF,1:no,0.898
+Çaglar Söyüncü,DEF,1:no,0.86
+James Justin,DEF,1:no,0.545
+Luke Thomas,DEF,1:no,0.825
+Wesley Fofana,DEF,1:no,0.766
+Jannik Vestergaard,DEF,1:no,0.999
+Liam Cooper,DEF,1:no,0.888
+Luke Ayling,DEF,2:return,0.677
+Diego Llorente,DEF,1:no,0.761
+Robin Koch,DEF,1:no,0.888
+Pascal Struijk,DEF,1:no,0.683
+Charlie Cresswell,DEF,1:no,0.999
+Leo Fuhr Hjelde,DEF,1:no,0.999
+Joel Matip,DEF,2:return,0.645
+Virgil van Dijk,DEF,1:no,0.52
+Andrew Robertson,DEF,2:return,0.735
+Trent Alexander-Arnold,DEF,2:return,0.676
+Joseph Gomez,DEF,1:no,0.693
+Ibrahima Konaté,DEF,1:no,0.998
+Konstantinos Tsimikas,DEF,1:no,0.998
+João Pedro Cavaco Cancelo,DEF,2:return,0.798
+Aymeric Laporte,DEF,1:no,0.52
+Rúben Santos Gato Alves Dias,DEF,1:no,0.998
+Oleksandr Zinchenko,DEF,1:no,0.998
+Harry Maguire,DEF,1:no,0.767
+Harry Maguire,DEF,1:no,0.718
+Alex Nicolao Telles,DEF,1:no,0.805
+Alex Nicolao Telles,DEF,1:no,0.761
+Victor Lindelöf,DEF,1:no,0.925
+Victor Lindelöf,DEF,1:no,0.905
+Eric Bailly,DEF,1:no,1
+Eric Bailly,DEF,1:no,1
+Aaron Wan-Bissaka,DEF,1:no,0.896
+Aaron Wan-Bissaka,DEF,1:no,0.869
+José Diogo Dalot Teixeira,DEF,1:no,0.683
+José Diogo Dalot Teixeira,DEF,1:no,0.624
+Raphaël Varane,DEF,1:no,1
+Raphaël Varane,DEF,1:no,1
+Phil Jones,DEF,1:no,1
+Phil Jones,DEF,1:no,1
+Matt Targett,DEF,2:return,0.613
+Dan Burn,DEF,2:return,0.595
+Matt Ritchie,DEF,1:no,0.999
+Jamaal Lascelles,DEF,1:no,0.999
+Paul Dummett,DEF,1:no,0.999
+Javier Manquillo,DEF,1:no,0.999
+Emil Krafth,DEF,1:no,0.729
+Fabian Schär,DEF,2:return,0.578
+Federico Fernández,DEF,1:no,0.999
+Brandon Williams,DEF,1:no,0.87
+Grant Hanley,DEF,1:no,0.625
+Sam Byram,DEF,1:no,0.683
+Christoph Zimmermann,DEF,1:no,0.999
+Max Aarons,DEF,1:no,0.983
+Ben Gibson,DEF,1:no,0.815
+Dimitris Giannoulis,DEF,1:no,0.815
+Jack Stephens,DEF,1:no,1
+Kyle Walker-Peters,DEF,1:no,0.687
+Jan Bednarek,DEF,1:no,0.603
+Mohammed Salisu,DEF,1:no,0.918
+Romain Perraud,DEF,1:no,0.808
+Tino Livramento,DEF,1:no,0.942
+Yan Valery,DEF,1:no,0.862
+Eric Dier,DEF,1:no,0.75
+Ben Davies,DEF,1:no,0.503
+Davinson Sánchez,DEF,1:no,0.999
+Ryan Sessegnon,DEF,1:no,0.999
+Sergio Reguilón,DEF,1:no,0.737
+Joe Rodon,DEF,1:no,0.999
+Cristian Romero,DEF,1:no,0.758
+Emerson Aparecido Leite de Souza Junior,DEF,2:return,0.509
+Craig Cathcart,DEF,1:no,1
+Francisco Femenía Far,DEF,1:no,0.913
+Christian Kabasele,DEF,1:no,0.945
+Adam Masina,DEF,1:no,1
+Jeremy Ngakia,DEF,1:no,1
+Hassane Kamara,DEF,1:no,0.926
+Samir Caetano de Souza Santos,DEF,1:no,0.941
+Aaron Cresswell,DEF,1:no,0.61
+Craig Dawson,DEF,1:no,0.87
+Ryan Fredericks,DEF,1:no,0.959
+Arthur Masuaku,DEF,1:no,1
+Vladimir Coufal,DEF,1:no,0.959
+Ben Johnson,DEF,1:no,0.861
+Harrison Ashby,DEF,1:no,1
+Willy Boly,DEF,1:no,0.859
+Conor Coady,DEF,1:no,0.678
+Romain Saïss,DEF,1:no,0.92
+Fernando Marçal,DEF,1:no,0.593
+Jonathan Castro Otto,DEF,2:return,0.766
+Nélson Cabral Semedo,DEF,1:no,0.999
+Max Kilman,DEF,1:no,0.859
+Rayan Ait Nouri,DEF,1:no,0.982
+Toti António Gomes,DEF,1:no,0.999
+Granit Xhaka,MID,1:no,0.934
+Mohamed Naser El Sayed Elneny,MID,1:no,1
+Nicolas Pépé,MID,1:no,0.997
+Emile Smith Rowe,MID,1:no,0.533
+Bukayo Saka,MID,2:return,0.979
+Gabriel Teodoro Martinelli Silva,MID,1:no,0.96
+Albert Sambi Lokonga,MID,1:no,0.999
+Martin Ødegaard,MID,1:no,0.67
+John McGinn,MID,1:no,0.82
+Marvelous Nakamba,MID,1:no,1
+Emiliano Buendía Stati,MID,1:no,0.958
+Douglas Luiz Soares de Paulo,MID,1:no,0.996
+Jacob Ramsey,MID,1:no,0.763
+Leon Bailey,MID,1:no,0.995
+Carney Chukwuemeka,MID,1:no,1
+Tim Iroegbunam,MID,1:no,1
+Philippe Coutinho Correia,MID,1:no,0.641
+Christian Nørgaard,MID,1:no,0.928
+Tariqe Fosu-Henry,MID,1:no,0.999
+Vitaly Janelt,MID,2:return,0.732
+Saman Ghoddos,MID,1:no,1
+Mathias Jensen,MID,1:no,0.998
+Bryan Mbeumo,MID,2:return,0.989
+Shandon Baptiste,MID,1:no,0.999
+Yoane Wissa,MID,1:no,0.652
+Christian Eriksen,MID,2:return,0.691
+Adam Lallana,MID,1:no,1
+Pascal Groß,MID,1:no,0.962
+Solomon March,MID,1:no,0.95
+Alexis Mac Allister,MID,1:no,0.983
+Enock Mwepu,MID,1:no,0.946
+Jeremy Sarmiento,MID,1:no,1
+Jack Cork,MID,1:no,1
+Dale Stephens,MID,1:no,1
+Josh Brownhill,MID,1:no,0.74
+Dwight McNeil,MID,1:no,0.974
+Aaron Lennon,MID,1:no,0.997
+Maxwel Cornet,MID,2:return,0.95
+Jorge Luiz Frello Filho,MID,1:no,1
+Jorge Luiz Frello Filho,MID,1:no,1
+Ross Barkley,MID,1:no,0.999
+Ross Barkley,MID,1:no,0.999
+NGolo Kanté,MID,1:no,0.909
+NGolo Kanté,MID,1:no,0.931
+Hakim Ziyech,MID,1:no,0.932
+Hakim Ziyech,MID,1:no,0.949
+Ruben Loftus-Cheek,MID,1:no,0.983
+Ruben Loftus-Cheek,MID,1:no,0.987
+Christian Pulisic,MID,1:no,0.996
+Christian Pulisic,MID,1:no,0.997
+Mason Mount,MID,2:return,0.926
+Mason Mount,MID,2:return,0.903
+Kai Havertz,MID,2:return,0.949
+Kai Havertz,MID,2:return,0.932
+Saúl Ñíguez,MID,1:no,1
+Saúl Ñíguez,MID,1:no,1
+Conor Gallagher,MID,1:no,1
+James McArthur,MID,1:no,0.997
+Wilfried Zaha,MID,2:return,0.94
+Jeffrey Schlupp,MID,1:no,0.951
+Jairo Riedewald,MID,1:no,1
+Eberechi Eze,MID,1:no,1
+Will Hughes,MID,1:no,1
+Michael Olise,MID,1:no,0.998
+Jesurun Rak-Sakyi,MID,1:no,1
+Anwar El Ghazi,MID,1:no,1
+Fabian Delph,MID,1:no,1
+Allan Marques Loureiro,MID,1:no,1
+André Filipe Tavares Gomes,MID,1:no,1
+Abdoulaye Doucouré,MID,1:no,1
+Alex Iwobi,MID,1:no,0.991
+Donny van de Beek,MID,1:no,1
+Bamidele Alli,MID,1:no,1
+Demarai Gray,MID,1:no,0.987
+Anthony Gordon,MID,1:no,0.735
+Tyler Onyango,MID,1:no,1
+Marc Albrighton,MID,1:no,0.998
+Nampalys Mendy,MID,1:no,1
+Youri Tielemans,MID,1:no,0.983
+Ayoze Pérez,MID,1:no,0.999
+James Maddison,MID,2:return,0.847
+Hamza Choudhury,MID,1:no,1
+Harvey Barnes,MID,1:no,0.739
+Kiernan Dewsbury-Hall,MID,1:no,0.618
+Ademola Lookman,MID,1:no,0.902
+Mateusz Klich,MID,1:no,0.99
+Stuart Dallas,MID,1:no,0.94
+Kalvin Phillips,MID,1:no,1
+Raphael Dias Belloli,MID,2:return,0.863
+Jack Harrison,MID,2:return,0.976
+Daniel James,MID,2:return,0.668
+Crysencio Summerville,MID,1:no,1
+Liam McCarron,MID,1:no,1
+Stuart McKinstry,MID,1:no,1
+Lewis Bate,MID,1:no,1
+James Milner,MID,1:no,1
+Jordan Henderson,MID,1:no,0.993
+Thiago Alcántara do Nascimento,MID,1:no,0.65
+Alex Oxlade-Chamberlain,MID,1:no,0.997
+Sadio Mané,MID,2:return,0.835
+Fabio Henrique Tavares,MID,1:no,0.771
+Mohamed Salah,MID,2:return,0.993
+Takumi Minamino,MID,1:no,0.997
+Naby Keita,MID,1:no,0.999
+Diogo Jota,MID,2:return,0.994
+Curtis Jones,MID,1:no,0.997
+Harvey Elliott,MID,1:no,0.997
+Tyler Morton,MID,1:no,1
+Kaide Gordon,MID,1:no,0.996
+Luis Díaz,MID,1:no,0.715
+Jack Grealish,MID,1:no,0.661
+Ilkay Gündogan,MID,1:no,0.627
+Kevin De Bruyne,MID,2:return,0.992
+Riyad Mahrez,MID,2:return,0.87
+Raheem Sterling,MID,2:return,0.508
+Bernardo Mota Veiga de Carvalho e Silva,MID,2:return,0.71
+Phil Foden,MID,2:return,0.702
+Rodrigo Hernandez,MID,1:no,0.971
+Fernando Luiz Rosa,MID,1:no,0.996
+Cole Palmer,MID,1:no,0.999
+James McAtee,MID,1:no,0.999
+Nemanja Matic,MID,1:no,1
+Nemanja Matic,MID,1:no,1
+Jesse Lingard,MID,1:no,0.994
+Jesse Lingard,MID,1:no,0.991
+Bruno Miguel Borges Fernandes,MID,1:no,0.893
+Bruno Miguel Borges Fernandes,MID,1:no,0.86
+Marcus Rashford,MID,1:no,0.998
+Marcus Rashford,MID,1:no,0.997
+Scott McTominay,MID,1:no,1
+Scott McTominay,MID,1:no,1
+Juan Mata,MID,1:no,0.999
+Juan Mata,MID,1:no,0.999
+Jadon Sancho,MID,1:no,0.888
+Jadon Sancho,MID,1:no,0.854
+Anthony Elanga,MID,1:no,0.895
+Anthony Elanga,MID,1:no,0.863
+Hannibal Mejbri,MID,1:no,1
+Hannibal Mejbri,MID,1:no,1
+Joseph Willock,MID,1:no,0.996
+Jonjo Shelvey,MID,1:no,0.978
+Jacob Murphy,MID,1:no,1
+Miguel Almirón,MID,1:no,0.731
+Sean Longstaff,MID,1:no,1
+Billy Gilmour,MID,1:no,0.996
+Kenny McLean,MID,1:no,0.595
+Kieran Dowell,MID,1:no,0.752
+Przemyslaw Placheta,MID,1:no,1
+Milot Rashica,MID,1:no,0.951
+Pierre Lees-Melou,MID,1:no,0.902
+Christos Tzolis,MID,1:no,1
+Mathias Normann,MID,1:no,0.932
+Jonathan Rowe,MID,1:no,0.999
+Theo Walcott,MID,1:no,1
+Oriol Romeu Vidal,MID,1:no,0.974
+Nathan Redmond,MID,1:no,1
+Stuart Armstrong,MID,1:no,0.962
+James Ward-Prowse,MID,1:no,0.566
+Nathan Tella,MID,1:no,1
+William Smallbone,MID,1:no,1
+Ibrahima Diallo,MID,1:no,1
+Moussa Djenepo,MID,1:no,1
+Mohamed Elyounoussi,MID,1:no,0.713
+Heung-Min Son,MID,2:return,0.995
+Lucas Rodrigues Moura da Silva,MID,1:no,0.999
+Pierre-Emile Højbjerg,MID,1:no,0.948
+Harry Winks,MID,1:no,1
+Steven Bergwijn,MID,1:no,0.993
+Dejan Kulusevski,MID,2:return,0.846
+Rodrigo Bentancur,MID,1:no,0.996
+Moussa Sissoko,MID,1:no,0.947
+Dan Gosling,MID,1:no,1
+Tom Cleverley,MID,1:no,1
+Ken Sema,MID,1:no,1
+Ismaila Sarr,MID,1:no,0.994
+Imrân Louza,MID,1:no,0.989
+Oghenekaro Peter Etebo,MID,1:no,1
+Juraj Kucka,MID,1:no,0.974
+Edo Kayembe,MID,1:no,1
+Mark Noble,MID,1:no,1
+Andriy Yarmolenko,MID,1:no,1
+Manuel Lanzini,MID,1:no,0.999
+Saïd Benrahma,MID,1:no,0.592
+Jarrod Bowen,MID,1:no,0.892
+Declan Rice,MID,1:no,0.975
+Tomas Soucek,MID,1:no,0.979
+Pablo Fornals,MID,1:no,0.978
+Nikola Vlasic,MID,1:no,0.999
+Alex Kral,MID,1:no,1
+Sonny Perkins,MID,1:no,1
+João Filipe Iria Santos Moutinho,MID,1:no,0.958
+Leander Dendoncker,MID,1:no,0.997
+Daniel Castelo Podence,MID,1:no,0.761
+Pedro Lomba Neto,MID,1:no,1
+Francisco Machado Mota de Castro Trincão,MID,1:no,0.793
+Luke Cundle,MID,1:no,1
+Alexandre Lacazette,FWD,1:no,0.992
+Edward Nketiah,FWD,2:return,0.594
+Ollie Watkins,FWD,2:return,0.79
+Danny Ings,FWD,1:no,0.737
+Ivan Toney,FWD,2:return,0.898
+Neal Maupay,FWD,1:no,0.982
+Danny Welbeck,FWD,1:no,0.854
+Jay Rodriguez,FWD,2:return,0.79
+Ashley Barnes,FWD,1:no,0.998
+Matej Vydra,FWD,1:no,0.98
+Lewis Richardson,FWD,1:no,0.998
+Wout Weghorst,FWD,2:return,0.586
+Timo Werner,FWD,2:return,0.903
+Timo Werner,FWD,2:return,0.857
+Romelu Lukaku,FWD,1:no,0.992
+Romelu Lukaku,FWD,1:no,0.995
+Christian Benteke,FWD,1:no,0.998
+Jordan Ayew,FWD,1:no,0.958
+Jean-Philippe Mateta,FWD,1:no,0.93
+Odsonne Edouard,FWD,1:no,0.992
+Richarlison de Andrade,FWD,2:return,0.752
+Salomón Rondón,FWD,1:no,0.991
+Lewis Dobbin,FWD,1:no,0.999
+Cenk Tosun,FWD,1:no,0.999
+Kelechi Iheanacho,FWD,1:no,0.882
+Patson Daka,FWD,1:no,0.98
+Rodrigo Moreno,FWD,2:return,0.844
+Sam Greenwood,FWD,1:no,0.971
+Joe Gelhardt,FWD,1:no,0.989
+Divock Origi,FWD,1:no,0.996
+Gabriel Fernando de Jesus,FWD,1:no,0.687
+Liam Delap,FWD,1:no,0.998
+Cristiano Ronaldo dos Santos Aveiro,FWD,2:return,0.743
+Cristiano Ronaldo dos Santos Aveiro,FWD,2:return,0.743
+Chris Wood,FWD,1:no,0.961
+Dwight Gayle,FWD,1:no,0.998
+Allan Saint-Maximin,FWD,1:no,0.978
+Joelinton Cássio Apolinário de Lira,FWD,1:no,0.918
+Teemu Pukki,FWD,2:return,0.932
+Che Adams,FWD,1:no,0.786
+Armando Broja,FWD,1:no,0.941
+Shane Long,FWD,1:no,0.998
+Adam Armstrong,FWD,1:no,0.995
+Harry Kane,FWD,2:return,0.898
+Dane Scarlett,FWD,1:no,0.998
+João Pedro Junqueira de Jesus,FWD,1:no,0.986
+Emmanuel Dennis,FWD,1:no,0.902
+Joshua King,FWD,1:no,0.997
+Michail Antonio,FWD,1:no,0.711
+Raúl Jiménez,FWD,1:no,0.982
+Fabio Silva,FWD,1:no,0.951
+Hee-Chan Hwang,FWD,1:no,0.988

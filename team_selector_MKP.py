@@ -121,6 +121,7 @@ for player in FPL_players:
 
         # check if the FPL player is in the candidates list by matching their names
         for candidate in candidates:
+            # players with accents occasionally omitted
             if currentPlayer.name == candidate[0]:
                 # if the player is a candidate then we store them in the processed candidates list
                 currentPlayer.pos = candidate[1]
@@ -187,45 +188,45 @@ for b in data['squad']:
 
 # no more than 3 players from any one club
 for b in data['squad']:
-    solver.Add(sum(x[i, b] * checkMatch('Arsenal', data['position'][i]) for i in data['players']) <= data['club_capacity'][b])
+    solver.Add(sum(x[i, b] * checkMatch('Arsenal', data['club'][i]) for i in data['players']) <= data['club_capacity'][b])
 for b in data['squad']:
-    solver.Add(sum(x[i, b] * checkMatch('Aston Villa', data['position'][i]) for i in data['players']) <= data['club_capacity'][b])
+    solver.Add(sum(x[i, b] * checkMatch('Aston Villa', data['club'][i]) for i in data['players']) <= data['club_capacity'][b])
 for b in data['squad']:
-    solver.Add(sum(x[i, b] * checkMatch('Brentford', data['position'][i]) for i in data['players']) <= data['club_capacity'][b])
+    solver.Add(sum(x[i, b] * checkMatch('Brentford', data['club'][i]) for i in data['players']) <= data['club_capacity'][b])
 for b in data['squad']:
-    solver.Add(sum(x[i, b] * checkMatch('Brighton', data['position'][i]) for i in data['players']) <= data['club_capacity'][b])
+    solver.Add(sum(x[i, b] * checkMatch('Brighton', data['club'][i]) for i in data['players']) <= data['club_capacity'][b])
 for b in data['squad']:
-    solver.Add(sum(x[i, b] * checkMatch('Burnley', data['position'][i]) for i in data['players']) <= data['club_capacity'][b])
+    solver.Add(sum(x[i, b] * checkMatch('Burnley', data['club'][i]) for i in data['players']) <= data['club_capacity'][b])
 for b in data['squad']:
-    solver.Add(sum(x[i, b] * checkMatch('Chelsea', data['position'][i]) for i in data['players']) <= data['club_capacity'][b])
+    solver.Add(sum(x[i, b] * checkMatch('Chelsea', data['club'][i]) for i in data['players']) <= data['club_capacity'][b])
 for b in data['squad']:
-    solver.Add(sum(x[i, b] * checkMatch('Crystal Palace', data['position'][i]) for i in data['players']) <= data['club_capacity'][b])
+    solver.Add(sum(x[i, b] * checkMatch('Crystal Palace', data['club'][i]) for i in data['players']) <= data['club_capacity'][b])
 for b in data['squad']:
-    solver.Add(sum(x[i, b] * checkMatch('Everton', data['position'][i]) for i in data['players']) <= data['club_capacity'][b])
+    solver.Add(sum(x[i, b] * checkMatch('Everton', data['club'][i]) for i in data['players']) <= data['club_capacity'][b])
 for b in data['squad']:
-    solver.Add(sum(x[i, b] * checkMatch('Leicester', data['position'][i]) for i in data['players']) <= data['club_capacity'][b])
+    solver.Add(sum(x[i, b] * checkMatch('Leicester', data['club'][i]) for i in data['players']) <= data['club_capacity'][b])
 for b in data['squad']:
-    solver.Add(sum(x[i, b] * checkMatch('Leeds', data['position'][i]) for i in data['players']) <= data['club_capacity'][b])
+    solver.Add(sum(x[i, b] * checkMatch('Leeds', data['club'][i]) for i in data['players']) <= data['club_capacity'][b])
 for b in data['squad']:
-    solver.Add(sum(x[i, b] * checkMatch('Liverpool', data['position'][i]) for i in data['players']) <= data['club_capacity'][b])
+    solver.Add(sum(x[i, b] * checkMatch('Liverpool', data['club'][i]) for i in data['players']) <= data['club_capacity'][b])
 for b in data['squad']:
-    solver.Add(sum(x[i, b] * checkMatch('Manchester City', data['position'][i]) for i in data['players']) <= data['club_capacity'][b])
+    solver.Add(sum(x[i, b] * checkMatch('Manchester City', data['club'][i]) for i in data['players']) <= data['club_capacity'][b])
 for b in data['squad']:
-    solver.Add(sum(x[i, b] * checkMatch('Manchester United', data['position'][i]) for i in data['players']) <= data['club_capacity'][b])
+    solver.Add(sum(x[i, b] * checkMatch('Manchester United', data['club'][i]) for i in data['players']) <= data['club_capacity'][b])
 for b in data['squad']:
-    solver.Add(sum(x[i, b] * checkMatch('Newcastle', data['position'][i]) for i in data['players']) <= data['club_capacity'][b])
+    solver.Add(sum(x[i, b] * checkMatch('Newcastle', data['club'][i]) for i in data['players']) <= data['club_capacity'][b])
 for b in data['squad']:
-    solver.Add(sum(x[i, b] * checkMatch('Norwich', data['position'][i]) for i in data['players']) <= data['club_capacity'][b])
+    solver.Add(sum(x[i, b] * checkMatch('Norwich', data['club'][i]) for i in data['players']) <= data['club_capacity'][b])
 for b in data['squad']:
-    solver.Add(sum(x[i, b] * checkMatch('Southampton', data['position'][i]) for i in data['players']) <= data['club_capacity'][b])
+    solver.Add(sum(x[i, b] * checkMatch('Southampton', data['club'][i]) for i in data['players']) <= data['club_capacity'][b])
 for b in data['squad']:
-    solver.Add(sum(x[i, b] * checkMatch('Tottenham', data['position'][i]) for i in data['players']) <= data['club_capacity'][b])
+    solver.Add(sum(x[i, b] * checkMatch('Tottenham', data['club'][i]) for i in data['players']) <= data['club_capacity'][b])
 for b in data['squad']:
-    solver.Add(sum(x[i, b] * checkMatch('Watford', data['position'][i]) for i in data['players']) <= data['club_capacity'][b])
+    solver.Add(sum(x[i, b] * checkMatch('Watford', data['club'][i]) for i in data['players']) <= data['club_capacity'][b])
 for b in data['squad']:
-    solver.Add(sum(x[i, b] * checkMatch('West Ham', data['position'][i]) for i in data['players']) <= data['club_capacity'][b])
+    solver.Add(sum(x[i, b] * checkMatch('West Ham', data['club'][i]) for i in data['players']) <= data['club_capacity'][b])
 for b in data['squad']:
-    solver.Add(sum(x[i, b] * checkMatch('Wolves', data['position'][i]) for i in data['players']) <= data['club_capacity'][b])
+    solver.Add(sum(x[i, b] * checkMatch('Wolves', data['club'][i]) for i in data['players']) <= data['club_capacity'][b])
 
 
 # Maximize total return confidence of the squad
