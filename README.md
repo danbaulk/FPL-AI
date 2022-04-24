@@ -4,18 +4,16 @@ AI Based Fantasy Premier League Team Picker
 This repository contains tools, models and data for selecting the optimal free-hit team for the upcoming gameweek in FPL.
 
 ## Repo Structure
-
 The numbered folders contain retrieved gameweek data, converted to .arff for the Weka models, along with the predictions from the models and the filtered player candidates to be considered for the team. The numbers correspond to the gameweek
 
-The data folder contains the data used for training the machine learning models.
+The Data folder contains the data used for training the machine learning models.
 
 The Models folder contains the machine learning models trained in Weka.
 
 id_dict.csv is a dictionary for looking up player names, understat IDs and FPL IDs.
-
-## Tools
 player.py is a class to hold data about player objects.
 
+## Tools
 retrieve_data.py is a tool for retrieving the data for the upcoming gameweek.
 
 team_candidates_generator.py is a tool for creating a list of cnadidates to provide to the team selector, from the results of the models.
