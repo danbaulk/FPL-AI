@@ -11,6 +11,7 @@ The Data folder contains the data used for training the machine learning models.
 The Models folder contains the machine learning models trained in Weka.
 
 id_dict.csv is a dictionary for looking up player names, understat IDs and FPL IDs.
+
 player.py is a class to hold data about player objects.
 
 ## Tools
