@@ -121,7 +121,7 @@ for player in FPL_players:
 
         # check if the FPL player is in the candidates list by matching their names
         for candidate in candidates:
-            # players with accents occasionally omitted
+            # TODO: players with accents occasionally omitted - use ID instead of name to find players
             if currentPlayer.name == candidate[0]:
                 # if the player is a candidate then we store them in the processed candidates list
                 currentPlayer.pos = candidate[1]
