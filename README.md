@@ -21,7 +21,7 @@ team_candidates_generator.py is a tool for creating a list of cnadidates to prov
 
 team_selector_MKP.py is a tool which takes a team candidates file and solves the multi-dimnesional knapsack packing problem to generate the optimal team within FPL rules.
 
-updateCSV.py is a tool which generates the training data. It combines historical FPL data with historical understat.com data.
+updateCSV.py is a tool which generates the training data. It combines historical FPL data with historical understat.com data. FPL data retrieved from: https://github.com/vaastav/Fantasy-Premier-League
 
 ## Usage
 The training data is already available in the Data folder, as well that machine learning models are already avaialble in the Models folder, so the updateCSV.py tool is one which can be ignored.
