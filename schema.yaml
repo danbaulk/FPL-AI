@@ -1,0 +1,24 @@
+openapi: 3.0.3
+info:
+  title: FPL API
+  version: 1.0.0
+  description: An API for using the FPL tools
+paths:
+  /create:
+    summary: create a team
+  /create/freehit:
+    get:
+      summary: create a free hit team
+      description: ''
+      operationId: freeHit
+      responses:
+        default:
+          description: Default error sample response
+          content:
+            application/json:
+              examples:
+                a free hit team:
+                  value: |-
+                    {
+                    "gk": "jeff"
+                    }
