@@ -35,6 +35,11 @@ func UpsertLatest(stats fpl.SeasonOverview, fixtures []fpl.Fixture) error {
 	}
 
 	for _, fixture := range fixtures {
+		// skip any fixture where gamewek = 0 as this is a fixture TBC and causes a foreign key constraint error
+		if fixture.Gameweek == 0 {
+			continue
+		}
+
 		err := upsertFixtureData(fixture)
 		if err != nil {
 			return fmt.Errorf("message=%q error=%v", "failed to upsert fixture data", err)
