@@ -24,7 +24,7 @@ func Predict(data []byte, position string) ([]byte, error) {
 	case "3":
 		endpoint = Host + "/fplai/predict/mid"
 	case "4":
-		endpoint = Host + "/fplai/data/convert"
+		endpoint = Host + "/fplai/predict/fwd"
 	default:
 		return nil, fmt.Errorf("message=%q", "invalid position")
 	}
