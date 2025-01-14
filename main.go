@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	"log/slog"
 	"net/http"
 	"os"
 	"time"
@@ -14,6 +15,7 @@ import (
 	models "github.com/danbaulk/FPL-AI/handlers/models"
 	team "github.com/danbaulk/FPL-AI/handlers/team"
 	users "github.com/danbaulk/FPL-AI/handlers/users"
+	"github.com/danbaulk/FPL-AI/log"
 	"github.com/danbaulk/FPL-AI/predictionengine"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -21,6 +23,9 @@ import (
 
 func main() {
 	// open up connections / initialise services and handlers / initialise environment variables
+	h := &log.ContextHandler{Handler: slog.NewJSONHandler(os.Stdout, nil)}
+	logger := slog.New(h)
+	slog.SetDefault(logger)
 
 	fpl.SeasonOverviewEndpoint = "https://fantasy.premierleague.com/api/bootstrap-static/"
 	fpl.SeasonFixturesEndpoint = "https://fantasy.premierleague.com/api/fixtures/"
