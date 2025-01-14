@@ -74,3 +74,22 @@ func Convert(data [][]string) ([]byte, error) {
 
 	return resBody, nil
 }
+
+// Ping makes a http request to the prediction engine ping endpoint to verify connectivity
+func Ping() error {
+	req, err := http.NewRequest(http.MethodGet, Host+"/fplai/ping", nil)
+	if err != nil {
+		return fmt.Errorf("message=%q error=%v", "failed to create request", err)
+	}
+
+	res, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return fmt.Errorf("message=%q error=%v", "failed to do request", err)
+	}
+
+	if res.StatusCode != http.StatusOK {
+		return fmt.Errorf("message=%q error=%v", "failed to ping prediction engine", err)
+	}
+
+	return nil
+}
