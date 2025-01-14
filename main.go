@@ -1,9 +1,9 @@
 package main
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
-	"log/slog"
 	"net/http"
 	"os"
 	"time"
@@ -22,11 +22,13 @@ import (
 )
 
 func main() {
-	// open up connections / initialise services and handlers / initialise environment variables
-	h := &log.ContextHandler{Handler: slog.NewJSONHandler(os.Stdout, nil)}
-	logger := slog.New(h)
-	slog.SetDefault(logger)
+	// Initialise logging
+	ctx := context.Background()
+	log.ProjectID = os.Getenv("PROJECT_ID")
+	fmt.Println("PROJECT_ID:", log.ProjectID)
+	log.Initialise(ctx, "fpl-go-api")
 
+	// Initialise environment variables
 	fpl.SeasonOverviewEndpoint = "https://fantasy.premierleague.com/api/bootstrap-static/"
 	fpl.SeasonFixturesEndpoint = "https://fantasy.premierleague.com/api/fixtures/"
 	fmt.Println("FPL_SEASON_OVERVIEW_ENDPOINT:", fpl.SeasonOverviewEndpoint)

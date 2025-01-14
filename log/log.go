@@ -2,17 +2,26 @@ package log
 
 import (
 	"context"
+	"fmt"
 	"log/slog"
-)
+	"os"
 
-type ctxKey string
+	"cloud.google.com/go/logging"
+)
 
 type ContextHandler struct {
 	slog.Handler
 }
+type ctxKey string
 
 const (
 	slogFields ctxKey = "slog_fields"
+)
+
+var (
+	ProjectID string
+
+	cloudLogger *logging.Logger
 )
 
 // Handle adds contextual attributes to the Record before calling the underlying handler
@@ -40,4 +49,33 @@ func AppendCtx(parent context.Context, attr slog.Attr) context.Context {
 	v := []slog.Attr{}
 	v = append(v, attr)
 	return context.WithValue(parent, slogFields, v)
+}
+
+func Initialise(ctx context.Context, name string) {
+	if ProjectID != "" {
+		cloudClient, err := logging.NewClient(ctx, ProjectID)
+		if err != nil {
+			fmt.Printf("Failed to create client: %v", err)
+		}
+		defer cloudClient.Close()
+		cloudLogger = cloudClient.Logger(name)
+	}
+
+	h := &ContextHandler{Handler: slog.NewJSONHandler(os.Stdout, nil)}
+	logger := slog.New(h)
+	slog.SetDefault(logger)
+}
+
+func Info(ctx context.Context, msg string) {
+	slog.InfoContext(ctx, msg)
+	if cloudLogger != nil {
+		cloudLogger.Log(logging.Entry{Severity: logging.Info, Payload: ctx.Value(slogFields)})
+	}
+}
+
+func Error(ctx context.Context, msg string) {
+	slog.ErrorContext(ctx, msg)
+	if cloudLogger != nil {
+		cloudLogger.Log(logging.Entry{Severity: logging.Error, Payload: ctx.Value(slogFields)})
+	}
 }
