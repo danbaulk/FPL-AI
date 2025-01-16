@@ -4,10 +4,12 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"log/slog"
 	"net/http"
 	"os"
 	"time"
 
+	"cloud.google.com/go/logging"
 	db "github.com/danbaulk/FPL-AI/data"
 	"github.com/danbaulk/FPL-AI/fpl"
 	data "github.com/danbaulk/FPL-AI/handlers/data"
@@ -24,9 +26,19 @@ import (
 func main() {
 	// Initialise logging
 	ctx := context.Background()
-	log.ProjectID = os.Getenv("PROJECT_ID")
-	fmt.Println("PROJECT_ID:", log.ProjectID)
-	log.Initialise(ctx, "fpl-go-api")
+	projectID := os.Getenv("PROJECT_ID")
+	fmt.Println("PROJECT_ID:", projectID)
+	if projectID != "" {
+		cloudClient, err := logging.NewClient(ctx, projectID)
+		if err != nil {
+			panic(err.Error())
+		}
+		defer cloudClient.Close()
+		log.CloudLogger = cloudClient.Logger("fpl-go-api")
+	}
+	h := &log.ContextHandler{Handler: slog.NewJSONHandler(os.Stdout, nil)}
+	logger := slog.New(h)
+	slog.SetDefault(logger)
 
 	// Initialise environment variables
 	fpl.SeasonOverviewEndpoint = "https://fantasy.premierleague.com/api/bootstrap-static/"

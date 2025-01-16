@@ -2,9 +2,7 @@ package log
 
 import (
 	"context"
-	"fmt"
 	"log/slog"
-	"os"
 
 	"cloud.google.com/go/logging"
 )
@@ -12,21 +10,18 @@ import (
 type ContextHandler struct {
 	slog.Handler
 }
+
 type ctxKey string
 
-const (
-	slogFields ctxKey = "slog_fields"
-)
+const slogProps ctxKey = "slog-props"
 
 var (
-	ProjectID string
-
-	cloudLogger *logging.Logger
+	CloudLogger *logging.Logger
 )
 
 // Handle adds contextual attributes to the Record before calling the underlying handler
 func (h ContextHandler) Handle(ctx context.Context, r slog.Record) error {
-	if attrs, ok := ctx.Value(slogFields).([]slog.Attr); ok {
+	if attrs, ok := ctx.Value(slogProps).([]slog.Attr); ok {
 		for _, v := range attrs {
 			r.AddAttrs(v)
 		}
@@ -35,47 +30,40 @@ func (h ContextHandler) Handle(ctx context.Context, r slog.Record) error {
 	return h.Handler.Handle(ctx, r)
 }
 
-// AppendCtx adds an slog attribute to the provided context so that it will be included in any Record created with such context
-func AppendCtx(parent context.Context, attr slog.Attr) context.Context {
+// AddProp adds a slog attribute to the provided context so that it will be included in any Record created with such context
+func AddProp(parent context.Context, attr slog.Attr) context.Context {
 	if parent == nil {
 		parent = context.Background()
 	}
 
-	if v, ok := parent.Value(slogFields).([]slog.Attr); ok {
+	if v, ok := parent.Value(slogProps).([]slog.Attr); ok {
 		v = append(v, attr)
-		return context.WithValue(parent, slogFields, v)
+		return context.WithValue(parent, slogProps, v)
 	}
 
 	v := []slog.Attr{}
 	v = append(v, attr)
-	return context.WithValue(parent, slogFields, v)
-}
-
-func Initialise(ctx context.Context, name string) {
-	if ProjectID != "" {
-		cloudClient, err := logging.NewClient(ctx, ProjectID)
-		if err != nil {
-			fmt.Printf("Failed to create client: %v", err)
-		}
-		defer cloudClient.Close()
-		cloudLogger = cloudClient.Logger(name)
-	}
-
-	h := &ContextHandler{Handler: slog.NewJSONHandler(os.Stdout, nil)}
-	logger := slog.New(h)
-	slog.SetDefault(logger)
+	return context.WithValue(parent, slogProps, v)
 }
 
 func Info(ctx context.Context, msg string) {
 	slog.InfoContext(ctx, msg)
-	if cloudLogger != nil {
-		cloudLogger.Log(logging.Entry{Severity: logging.Info, Payload: ctx.Value(slogFields)})
+	if CloudLogger != nil {
+		CloudLogger.Log(logging.Entry{
+			Severity: logging.Info,
+			Payload:  msg,
+			Labels:   ctx.Value(slogProps).(map[string]string),
+		})
 	}
 }
 
 func Error(ctx context.Context, msg string) {
 	slog.ErrorContext(ctx, msg)
-	if cloudLogger != nil {
-		cloudLogger.Log(logging.Entry{Severity: logging.Error, Payload: ctx.Value(slogFields)})
+	if CloudLogger != nil {
+		CloudLogger.Log(logging.Entry{
+			Severity: logging.Error,
+			Payload:  msg,
+			Labels:   ctx.Value(slogProps).(map[string]string),
+		})
 	}
 }

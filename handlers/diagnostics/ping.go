@@ -14,17 +14,17 @@ import (
 // Ping reports the current running status of the API
 func Ping(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	ctx = log.AppendCtx(ctx, slog.String("handler", "ping"))
+	ctx = log.AddProp(ctx, slog.String("handler", "ping"))
 
 	// add some debug information to the context
 	buildInfo, _ := debug.ReadBuildInfo()
-	ctx = log.AppendCtx(ctx, slog.Int("pid", os.Getpid()))
-	ctx = log.AppendCtx(ctx, slog.String("go_version", buildInfo.GoVersion))
+	ctx = log.AddProp(ctx, slog.Int("pid", os.Getpid()))
+	ctx = log.AddProp(ctx, slog.String("go_version", buildInfo.GoVersion))
 
 	// check connection to the JAVA API
 	err := predictionengine.Ping()
 	if err != nil {
-		ctx = log.AppendCtx(ctx, slog.String("ping_error", err.Error()))
+		ctx = log.AddProp(ctx, slog.String("ping_error", err.Error()))
 		log.Error(ctx, "failed to ping the prediction engine")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
@@ -33,7 +33,7 @@ func Ping(w http.ResponseWriter, r *http.Request) {
 	// check connection to the DB
 	err = db.Conn.Ping()
 	if err != nil {
-		ctx = log.AppendCtx(ctx, slog.String("ping_error", err.Error()))
+		ctx = log.AddProp(ctx, slog.String("ping_error", err.Error()))
 		log.Error(ctx, "failed to ping the db")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
