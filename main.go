@@ -26,8 +26,9 @@ import (
 func main() {
 	// Initialise logging
 	ctx := context.Background()
+
 	projectID := os.Getenv("PROJECT_ID")
-	fmt.Println("PROJECT_ID:", projectID)
+	ctx = log.AddProp(ctx, slog.String("PROJECT_ID:", projectID))
 	if projectID != "" {
 		cloudClient, err := logging.NewClient(ctx, projectID)
 		if err != nil {
@@ -36,6 +37,7 @@ func main() {
 		defer cloudClient.Close()
 		log.CloudLogger = cloudClient.Logger("fpl-go-api")
 	}
+
 	h := &log.ContextHandler{Handler: slog.NewJSONHandler(os.Stdout, nil)}
 	logger := slog.New(h)
 	slog.SetDefault(logger)
@@ -43,31 +45,34 @@ func main() {
 	// Initialise environment variables
 	fpl.SeasonOverviewEndpoint = "https://fantasy.premierleague.com/api/bootstrap-static/"
 	fpl.SeasonFixturesEndpoint = "https://fantasy.premierleague.com/api/fixtures/"
-	fmt.Println("FPL_SEASON_OVERVIEW_ENDPOINT:", fpl.SeasonOverviewEndpoint)
-	fmt.Println("FPL_SEASON_FIXTURES_ENDPOINT:", fpl.SeasonFixturesEndpoint)
+	ctx = log.AddProp(ctx, slog.String("FPL_SEASON_OVERVIEW_ENDPOINT", fpl.SeasonOverviewEndpoint))
+	ctx = log.AddProp(ctx, slog.String("FPL_SEASON_FIXTURES_ENDPOINT:", fpl.SeasonFixturesEndpoint))
 
 	predictionengine.Host = os.Getenv("ENGINE_HOST")
-	fmt.Println("ENGINE_HOST:", predictionengine.Host)
+	ctx = log.AddProp(ctx, slog.String("ENGINE_HOST:", predictionengine.Host))
 
 	db.Username = os.Getenv("MYSQL_USER")
 	db.Password = os.Getenv("MYSQL_PASSWORD")
 	db.Hostname = os.Getenv("MYSQL_HOST")
 	db.Dbname = "fpl"
-	fmt.Println("MYSQL_USER:", db.Username)
-	fmt.Println("MYSQL_PASSWORD:", db.Password)
-	fmt.Println("MYSQL_HOST:", db.Hostname)
-	fmt.Println("MYSQL_DBNAME:", db.Dbname)
+	ctx = log.AddProp(ctx, slog.String("MYSQL_USER:", db.Username))
+	ctx = log.AddProp(ctx, slog.String("MYSQL_PASSWORD:", db.Password))
+	ctx = log.AddProp(ctx, slog.String("MYSQL_HOST:", db.Hostname))
+	ctx = log.AddProp(ctx, slog.String("MYSQL_DBNAME:", db.Dbname))
 
 	// DB Connection Initialisation
 	var err error
 	db.Conn, err = sql.Open("mysql", fmt.Sprintf("%s:%s@tcp(%s)/%s", db.Username, db.Password, db.Hostname, db.Dbname))
 	if err != nil {
+		log.Critical(ctx, "failed to connect to database", err)
 		panic(err.Error())
 	}
 	db.Conn.SetMaxOpenConns(20)
 	db.Conn.SetMaxIdleConns(20)
 	db.Conn.SetConnMaxLifetime(time.Minute * 5)
 	defer db.Conn.Close()
+
+	log.Info(ctx, "FPL API Initialised")
 
 	// Data endpoints
 	http.HandleFunc("/data/gameweekinput", data.GameweekInput)

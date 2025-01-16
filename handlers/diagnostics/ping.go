@@ -24,8 +24,7 @@ func Ping(w http.ResponseWriter, r *http.Request) {
 	// check connection to the JAVA API
 	err := predictionengine.Ping()
 	if err != nil {
-		ctx = log.AddProp(ctx, slog.String("ping_error", err.Error()))
-		log.Error(ctx, "failed to ping the prediction engine")
+		log.Error(ctx, "failed to ping the prediction engine", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
@@ -33,12 +32,10 @@ func Ping(w http.ResponseWriter, r *http.Request) {
 	// check connection to the DB
 	err = db.Conn.Ping()
 	if err != nil {
-		ctx = log.AddProp(ctx, slog.String("ping_error", err.Error()))
-		log.Error(ctx, "failed to ping the db")
+		log.Error(ctx, "failed to ping the db", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
 	log.Info(ctx, "request processed")
-	w.WriteHeader(http.StatusOK)
 }

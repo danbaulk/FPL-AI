@@ -19,6 +19,17 @@ var (
 	CloudLogger *logging.Logger
 )
 
+// Handle adds contextual attributes to the Record before calling the underlying handler
+func (h ContextHandler) Handle(ctx context.Context, r slog.Record) error {
+	if attrs, ok := ctx.Value(slogProps).([]slog.Attr); ok {
+		for _, v := range attrs {
+			r.AddAttrs(v)
+		}
+	}
+
+	return h.Handler.Handle(ctx, r)
+}
+
 func getProps(ctx context.Context) map[string]string {
 	props := make(map[string]string)
 
@@ -31,31 +42,35 @@ func getProps(ctx context.Context) map[string]string {
 	return props
 }
 
-// Handle adds contextual attributes to the Record before calling the underlying handler
-func (h ContextHandler) Handle(ctx context.Context, r slog.Record) error {
-	if attrs, ok := ctx.Value(slogProps).([]slog.Attr); ok {
-		for _, v := range attrs {
-			r.AddAttrs(v)
-		}
+func addErr(ctx context.Context, err error) context.Context {
+	if ctx == nil {
+		ctx = context.Background()
 	}
 
-	return h.Handler.Handle(ctx, r)
+	if attrs, ok := ctx.Value(slogProps).([]slog.Attr); ok {
+		attrs = append(attrs, slog.String("error_parcel", err.Error()))
+		return context.WithValue(ctx, slogProps, attrs)
+	}
+
+	attrs := []slog.Attr{}
+	attrs = append(attrs, slog.String("error_parcel", err.Error()))
+	return context.WithValue(ctx, slogProps, attrs)
 }
 
 // AddProp adds a slog attribute to the provided context so that it will be included in any Record created with such context
-func AddProp(parent context.Context, attr slog.Attr) context.Context {
-	if parent == nil {
-		parent = context.Background()
+func AddProp(ctx context.Context, attr slog.Attr) context.Context {
+	if ctx == nil {
+		ctx = context.Background()
 	}
 
-	if v, ok := parent.Value(slogProps).([]slog.Attr); ok {
-		v = append(v, attr)
-		return context.WithValue(parent, slogProps, v)
+	if attrs, ok := ctx.Value(slogProps).([]slog.Attr); ok {
+		attrs = append(attrs, attr)
+		return context.WithValue(ctx, slogProps, attrs)
 	}
 
-	v := []slog.Attr{}
-	v = append(v, attr)
-	return context.WithValue(parent, slogProps, v)
+	attrs := []slog.Attr{}
+	attrs = append(attrs, attr)
+	return context.WithValue(ctx, slogProps, attrs)
 }
 
 func Info(ctx context.Context, msg string) {
@@ -69,11 +84,26 @@ func Info(ctx context.Context, msg string) {
 	}
 }
 
-func Error(ctx context.Context, msg string) {
+func Error(ctx context.Context, msg string, err error) {
+	ctx = addErr(ctx, err)
+
 	slog.ErrorContext(ctx, msg)
 	if CloudLogger != nil {
 		CloudLogger.Log(logging.Entry{
 			Severity: logging.Error,
+			Payload:  msg,
+			Labels:   getProps(ctx),
+		})
+	}
+}
+
+func Critical(ctx context.Context, msg string, err error) {
+	ctx = addErr(ctx, err)
+
+	slog.ErrorContext(ctx, msg)
+	if CloudLogger != nil {
+		CloudLogger.Log(logging.Entry{
+			Severity: logging.Critical,
 			Payload:  msg,
 			Labels:   getProps(ctx),
 		})
