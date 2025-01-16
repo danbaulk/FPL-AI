@@ -19,6 +19,18 @@ var (
 	CloudLogger *logging.Logger
 )
 
+func getProps(ctx context.Context) map[string]string {
+	props := make(map[string]string)
+
+	if attrs, ok := ctx.Value(slogProps).([]slog.Attr); ok {
+		for _, v := range attrs {
+			props[v.Key] = v.Value.String()
+		}
+	}
+
+	return props
+}
+
 // Handle adds contextual attributes to the Record before calling the underlying handler
 func (h ContextHandler) Handle(ctx context.Context, r slog.Record) error {
 	if attrs, ok := ctx.Value(slogProps).([]slog.Attr); ok {
@@ -52,7 +64,7 @@ func Info(ctx context.Context, msg string) {
 		CloudLogger.Log(logging.Entry{
 			Severity: logging.Info,
 			Payload:  msg,
-			Labels:   ctx.Value(slogProps).(map[string]string),
+			Labels:   getProps(ctx),
 		})
 	}
 }
@@ -63,7 +75,7 @@ func Error(ctx context.Context, msg string) {
 		CloudLogger.Log(logging.Entry{
 			Severity: logging.Error,
 			Payload:  msg,
-			Labels:   ctx.Value(slogProps).(map[string]string),
+			Labels:   getProps(ctx),
 		})
 	}
 }
