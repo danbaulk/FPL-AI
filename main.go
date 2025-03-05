@@ -76,6 +76,7 @@ func main() {
 
 	// Data endpoints
 	http.HandleFunc("/data/gameweekinput", data.GameweekInput)
+	http.HandleFunc("/data/nextgameweek", data.NextGameweek)
 
 	// Models endpoints
 	http.HandleFunc("/models/predict", models.Predict)
